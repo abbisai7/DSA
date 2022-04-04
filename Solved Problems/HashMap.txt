@@ -19,7 +19,7 @@ class Solution:
                 d.pop(i)
         return res
 
-Q. Intersection of Two Arrays II LC 350
+Q. Intersection of Two Arrays II LC-350
 
 https://leetcode.com/problems/intersection-of-two-arrays-ii/
 
