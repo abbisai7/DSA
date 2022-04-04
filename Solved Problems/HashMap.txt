@@ -1,0 +1,148 @@
+HashMap Problems
+
+Q.Intersection of two arrays LC-349
+
+https://leetcode.com/problems/intersection-of-two-arrays/
+
+#Pop is used to avoid repitiion of elements.Once one element is appended to res, then it is popped from dict
+class Solution:
+    #TC-O(m+n)
+    #SC-O(m)
+    def intersection(self, nums1: List[int], nums2: List[int]) -> List[int]:
+        d = {}
+        for idx in (nums1):
+            d[idx] = True
+        res = []
+        for i in nums2:
+            if i in d:
+                res.append(i)
+                d.pop(i)
+        return res
+
+Q. Intersection of Two Arrays II LC 350
+
+https://leetcode.com/problems/intersection-of-two-arrays-ii/
+
+#the problem is same as above but here we are returning the elements as many time it appears.
+class Solution:
+    def intersect(self, nums1: List[int], nums2: List[int]) -> List[int]:
+        #TC-O(m+n)
+        #SC-O(m)
+        d = {}
+        for idx in (nums1):
+            if idx in d:
+                d[idx] += 1
+            else:
+                d[idx] = 1
+        res = []
+        for i in nums2:
+            if i in d and d[i]>0:
+                res.append(i)
+                d[i] -= 1
+        return res
+
+Q. Intersection of three arrays
+
+https://practice.geeksforgeeks.org/problems/common-elements1132/1/
+
+# same as above one, first we find common elements in first and second array, and then the common elements between resultant and third array.
+
+class Solution:
+    def commonElements (self,A, B, C, n1, n2, n3):
+        # TC-O(A+B+C)
+	  # SC-O(A+B)
+        d = {}
+        for idx in (A):
+            #if idx not in d:
+                d[idx] = True
+        d1 = {}
+        for i in B:
+            #if i in d:
+                d1[i] = True
+                d.pop(i)
+        res=[]        
+        for i in C:
+            if i in d1:
+                res.append(i)
+                d1.pop(i)
+        return res
+
+#Total number of subarrays for a given array of size n is n(n+1)/2
+
+#code to generate all subarrrays brute force method
+
+x=[-1,1,0,-1]
+res = []
+for i in range(len(x)):
+    for j in range(i+1,len(x)+1):
+        res.append(x[i:j])
+print(res)
+
+Note:- for largest zero subarray we deal with indexes, for count of zero subarray we deal with occurcencess in hashmap
+
+Q. Largest subarray with 0 sum
+
+https://practice.geeksforgeeks.org/problems/largest-subarray-with-0-sum/1#
+
+#Here we use set 0 index to -1, because we set prefix sum to 0 initially which is done before to the 0 index.
+
+class Solution:
+    #TC&SC - o(n)
+    def maxLen(self, n, arr):
+        #Code here
+        memo={}
+        prefixSum = 0
+        ans=0
+        
+        memo[prefixSum] = -1
+        
+        for i in range(n):
+            prefixSum += arr[i]
+            
+            if prefixSum in memo:
+                ans= max(ans,i-memo[prefixSum])
+            else:
+                memo[prefixSum] = i
+                
+        return ans
+
+Q: Subarrays With Zero Sum
+
+https://www.codingninjas.com/codestudio/problems/subarrays-with-zero-sum_3161876?leftPanelTab=0
+
+from typing import List
+
+def countSubarrays(n: int, arr: List[int]) -> int:
+    #brute force approach 
+    #Tc- o(n3)
+    #res = []
+    #for i in range(len(arr)):
+        #for j in range(i+1,len(arr)+1):
+            #res.append(arr[i:j])
+    #cs=0
+    #for i in range(len(res)):
+        #sum1 = sum(res[i])
+        #if sum1==0:
+            #cs += 1
+    #return cs
+    
+    #using hashmap
+    #TC - O(n)
+    memo = {}
+    ans = 0
+    preFixSum = 0
+    memo[0]=1
+    for i in arr:
+        preFixSum += i
+        if preFixSum in memo:
+            ans=ans+memo[preFixSum]
+            memo[preFixSum] +=1
+        else:
+            memo[preFixSum] = 1
+    return ans
+
+
+
+
+
+
