@@ -1,4 +1,4 @@
-HashMap Problems
+HashMap Solved Problems
 
 Q.Intersection of two arrays LC-349
 
