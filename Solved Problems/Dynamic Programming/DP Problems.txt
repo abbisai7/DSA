@@ -1,0 +1,76 @@
+#Dp Problems Solved
+
+
+Q: Climbing Stairs - LC 70
+
+https://leetcode.com/problems/climbing-stairs/
+
+# Here we can either climb one step or two step, which implies index can be moved 1 or 2
+
+#currIdx-> currIdx+1 and currIdx+2
+
+Input: n = 3
+Output: 3
+Explanation: There are three ways to climb to the top.
+1. 1 step + 1 step + 1 step
+2. 1 step + 2 steps
+3. 2 steps + 1 step
+
+class Solution:
+    #TC - O(n)
+    #SC - O(n)
+    def climbStairs(self, n: int) -> int:
+        return self.totalWays(0,n,{})
+    
+    def totalWays(self,currIdx,target,memo):
+        
+        if currIdx == target:
+            return 1
+        
+        if currIdx > target:
+            return 0
+        
+        if currIdx in memo:
+            return memo[currIdx]
+        
+        oneStep = self.totalWays(currIdx+1,target,memo)
+        twoStep = self.totalWays(currIdx+2,target,memo)
+        
+        memo[currIdx] = oneStep + twoStep
+        
+        return memo[currIdx]      
+        
+Q: Fibonacci Number LC- 509
+
+https://leetcode.com/problems/fibonacci-number/
+
+#F(0) = 0, F(1) = 1
+#F(n) = F(n - 1) + F(n - 2), for n > 1.
+Input: n = 4
+Output: 3
+Explanation: F(4) = F(3) + F(2) = 2 + 1 = 3.
+
+class Solution:
+    #TC - O(n)
+    #SC - O(n)- Length of stack which goes till n
+    def fib(self, n: int) -> int:
+        return self.nthFib(n,{})
+    
+    def nthFib(self, n, d):
+        if n == 0:
+            return 0
+        if n == 1:
+            return 1
+        cs = n
+        if cs in d:
+            return d[cs]
+        
+        a = self.nthFib(n-1,d)
+        b = self.nthFib(n-2,d)
+        
+        d[cs] = a+b
+        
+        return  a+b 
+        
+
+
