@@ -1,6 +1,9 @@
 #Dp Problems Solved
 
 
+->DP Numbers of ways - oneStep+twoStep
+
+
 Q: Climbing Stairs - LC 70
 
 https://leetcode.com/problems/climbing-stairs/
@@ -71,6 +74,8 @@ class Solution:
         d[cs] = a+b
         
         return  a+b 
+
+
         
 
 
