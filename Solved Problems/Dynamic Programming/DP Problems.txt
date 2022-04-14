@@ -76,6 +76,87 @@ class Solution:
         return  a+b 
 
 
+#Coin Change Varities
+
+Q: Coin Change 2 LC 518
+
+https://leetcode.com/problems/coin-change-2/
+
+This is an unbounded knapsack type problem, where an elements can be considered any number of types.Here we find the number of ways in which the coins can be used to form the amount, the recursion logic is almost same of climbing stairs
+
+
+class Solution:
+    #TC - O(n*amount)
+    #SC - O(n)
+    def change(self, amount: int, coins: List[int]) -> int:
+        return self.noOfWays(amount,coins,0,{})
+    
+    def noOfWays(self,amount,coins,curIdx,memo):
+
+        #if amount is zero at any point, return 1
+        if amount == 0:
+            return 1
         
+        #base condition when array bounds out of length
+        if curIdx >= len(coins):
+            return 0
+        
+        #declare the key for Dynamic Programming
+        curKey = str(curIdx) + "-" + str(amount)
+        
+        #check if the memo already contains key
+        if curKey in memo:
+            return memo[curKey]
+        
+        curAmount = coins[curIdx]
+        consider = 0
+        
+        #check if coins of current index is less than or equal to amount only then check for pickItem
+        if curAmount <= amount:
+            #pickItem = profit + function call of the same current Index - unbounded Knapsack(includes duplicates)
+            consider = self.noOfWays(amount-curAmount,coins,curIdx,memo)#if the coin is considerd reduce the amount by the value of that coin
+        
+        #dont pick, move to next index
+        notConsider = self.noOfWays(amount,coins,curIdx+1,memo)
+        
+        memo[curKey] = consider + notConsider #summing the ways
+        
+        return memo[curKey]
 
+Q: Coin Change LC 322
 
+#Here we need to find min the number of coins required to sum up the amount. 
+#Whenever we need to find min we set the consider elements to infinity so minimum elements amoung consider and notConsider is returned.
+https://leetcode.com/problems/coin-change/
+
+class Solution:
+    def coinChange(self, coins: List[int], amount: int) -> int:
+        #if amount%coins[0] !=0 and len(coins) == 1:
+            #return -1
+        
+        x = self.maxProfit(amount,coins,0,{})
+        return x if x != inf else -1
+    
+    def maxProfit(self,amount,coins,curIdx,memo):  
+        if amount == 0:
+            return 0
+        
+        if curIdx >= len(coins):
+            return float("inf")
+        
+        curKey = str(curIdx) + "-" + str(amount)
+        
+        if curKey in memo:
+            return memo[curKey]
+        
+        curAmount = coins[curIdx]
+        consider = math.inf
+        
+        if curAmount <= amount:
+            consider = 1 + self.maxProfit(amount-curAmount,coins,curIdx,memo)
+            
+        notConsider = self.maxProfit(amount,coins,curIdx+1,memo)
+        
+        memo[curKey] = min(consider,notConsider)
+
+        return  memo[curKey] 
