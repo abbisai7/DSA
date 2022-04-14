@@ -162,5 +162,231 @@ class Solution:
         return len(d)
 
 
+#Sliding window has two operations 1.acquire 2.release
+#Acquire - is used to iterate over elements till the k element size
+# release - is used to move to the next element when the acquire reaches k size
+Q: Count distinct elements in every window
+
+https://practice.geeksforgeeks.org/problems/count-distinct-elements-in-every-window/1
+
+#Brute Force approach
+#TC - O(n*k)
+l=[1,2,1,3,4,2,3]
+k=4
+ans=[]
+for i in range(len(l)-k+1): #O(n)
+    d = {}
+    count = 0
+    for j in range(i,i+k):#O(k)
+        if l[j] not in d:
+            count+=1
+            d[l[j]] = 1
+    ans.append(count)
+print(ans)
 
 
+# The below four problem are of same type we use the expression method for solving the questions of type of equal 0 and 1 or equal 0 1 and 2
+Q: Equal 0, 1 and 2
+
+https://practice.geeksforgeeks.org/problems/equal-0-1-and-23208/1/
+
+#Input: str = “0102010”
+#Output: 2
+#Explanation: Substring str[2, 4] = “102” and substring str[4, 6] = “201” has equal number of 0, 1 and 2
+
+#HashMap approach
+
+class Solution:
+    def getSubstringWithEqual012(self, Str):
+        # TC- O(n)
+        # SC - O(n)
+        z0 = 0
+        z1 = 0
+        z2 = 0
+        d = {}
+        
+        ans=0
+        
+        d[str(z1-z0)+"-"+str(z2-z1)] = 1
+        
+        for i in range(len(Str)):
+            
+            if Str[i] == '0':
+                z0 += 1
+            
+            elif Str[i] == '1':
+                z1 += 1
+            
+            else:
+                z2 += 1
+            
+            expr = str(z1-z0)+"-"+str(z2-z1)
+            
+            if expr in d:
+                ans += d[expr]
+                d[expr] += 1
+            else:
+                d[expr] = 1
+        
+        return ans
+
+Q:Subarrays with equal 1s and 0s
+
+https://practice.geeksforgeeks.org/problems/count-subarrays-with-equal-number-of-1s-and-0s-1587115620/1/#
+
+#same as above here it is only 0 and 1, where as above it is 0,1
+
+class Solution:
+    
+    #Function to count subarrays with 1s and 0s.
+    def countSubarrWithEqualZeroAndOne(self,arr, n):
+        #Your code here
+        z0 = 0
+        z1 = 1
+        d={}
+        
+        ans = 0
+        d[z1-z0] = 1
+        
+        for i in arr:
+            
+            if i == 0:
+                z0 += 1
+            else:
+                z1 += 1
+                
+            expr = z1-z0
+            
+            if expr in d:
+                ans += d[expr]
+                d[expr] += 1
+            else:
+                d[expr] = 1
+                
+        return ans
+
+Q: Longest Subarray With Equal Number Of 0s 1s And 2s
+https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/hashmap-and-heaps/longest-subarray-with-equal-number-of-0s-1s-and-2s-official/ojquestion
+
+#Same as above, here we will consider the indexes instead of count
+def largestSubArray(N,nums):
+    z0=0
+    z1=0
+    z2=0
+    d={}
+    ans = 0
+    
+    d[str(z1-z0)+"#"+str(z2-z1)] = -1
+    
+    for i in range(N):
+        if nums[i] == 0:
+            z0 +=1
+        elif nums[i] == 1:
+            z1 += 1
+        else:
+            z2 += 1
+        
+        expr = str(z1-z0)+"#"+str(z2-z1)
+        
+        if expr in d:
+            ans = max(ans,i-d[expr])
+        else:
+            d[expr]=i
+    
+    return ans
+
+
+Q:Largest subarray of 0's and 1's 
+
+#same as above here it is only 0 and 1, where as above it is 0,1 and 2
+
+https://practice.geeksforgeeks.org/problems/largest-subarray-of-0s-and-1s/1/
+
+class Solution:
+    def maxLen(self,arr, N):
+        # code here
+        
+        z0 = 0
+        z1 = 1
+        d={}
+        
+        ans = 0
+        d[z1-z0] = -1
+        
+        for i in range(len(arr)):
+            
+            if arr[i] == 0:
+                z0 += 1
+            else:
+                z1 += 1
+                
+            expr = z1-z0
+            
+            if expr in d:
+                ans = max(ans,i-d[expr])
+            else:
+                d[expr] = i
+                
+        return ans
+
+
+
+#These are of type largest and longest subarray with 0 sum
+#Here we take ps-k and search in hashmap if we already have them
+Q: Subarray Sum Equals K(LC 560)
+
+https://leetcode.com/problems/subarray-sum-equals-k/
+
+class Solution:
+    def subarraySum(self, nums: List[int], k: int) -> int:
+        #TC - O(n)
+        #SC - O(n)
+        ans = 0
+        ps = 0
+        d = {}
+        d[0] = 1
+        
+        for i in nums:
+            
+            ps += i
+            
+            if (ps-k) in d:
+                ans += d[ps-k]
+             
+            if ps in d:
+                d[ps] += 1
+            else:
+                d[ps] = 1
+        
+        return ans
+
+
+
+
+Q:Longest Sub-Array with Sum K
+
+https://practice.geeksforgeeks.org/problems/longest-sub-array-with-sum-k0809/1/
+
+
+class Solution:
+    def lenOfLongSubarr (self, nums, N, k) : 
+        #Complete the function
+        #TC - O(n)
+        #SC - O(n)
+        ans = 0
+        ps = 0
+        d = {}
+        
+        d[0] = -1
+        
+        for i in range(N):
+            
+            ps += nums[i]
+            
+            if (ps-k) in d:
+                ans = max(ans,i-d[ps-k])
+             
+            if ps not in d:
+                d[ps] = i
+        
+        return ans
