@@ -390,3 +390,102 @@ class Solution:
                 d[ps] = i
         
         return ans
+
+Q: Subarray Sums Divisible by K LC 974
+
+https://leetcode.com/problems/subarray-sums-divisible-by-k/
+
+
+#Here in hashmap we will be storing the remainder and its number of occurcencess.
+#If preFixSum%k is repeating,that menas we have a valid subarray
+
+
+class Solution:
+    #TC - O(n)
+    #SC- O(k)
+    def subarraysDivByK(self, nums: List[int], k: int) -> int:
+        ans = 0
+        d={}
+        ps = 0
+        
+        d[0] = 1
+        
+        for i in nums:
+            ps += i
+            
+            #Checking whether the remainder of the current preFixSum is in hashmap
+            if ps%k in d:
+                ans += d[ps%k]
+                d[ps%k] += 1
+            else:
+                d[ps%k] = 1
+                
+        return ans
+
+
+Q: Longest subarray with sum divisible by K GFG
+
+https://practice.geeksforgeeks.org/problems/longest-subarray-with-sum-divisible-by-k1259/1#
+
+#Same as above one, here we are finding longest subarray instead of occurcencess
+
+class Solution:
+	def longSubarrWthSumDivByK (self,arr,  n, k) : 
+		#Complete the function
+        ans = 0
+        d={}
+        ps = 0
+        
+        d[0] = -1
+        
+        for i in range(len(arr)):
+            ps += arr[i]
+            
+            if ps%k in d:
+                ans = max(ans,i-d[ps%k])
+            else:
+                d[ps%k] = i
+
+Q: Two Sum LC 1
+
+https://leetcode.com/problems/two-sum/
+
+#a+b=target
+#a=target-b
+#In the hashmap we store element and its index, we find the complement and search whether it is hashmap, then we will output both the indexes.
+#If not present in hashmap we will push the element and index into hashmap
+class Solution:
+    #TC - O(n)
+    #SC - O(n)
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        d = {}
+        for i in range(len(nums)):
+            complement = target-nums[i]
+            
+            if complement in d:
+                return [d[complement],i]
+            else:
+                d[nums[i]] = i
+
+Q:Find Pair Given Difference
+
+https://practice.geeksforgeeks.org/problems/find-pair-given-difference1559/1#
+
+#we use two equations to check corner cases
+#a-b= target
+#a=target+b
+#b=a-target
+class Solution:
+
+    def findPair(self, nums,N,target):
+        #code here
+        d={}
+        for i in range(len(nums)):
+            complement = target+nums[i]
+            
+            if complement in d or nums[i]-target in d:
+                return True
+                
+            d[nums[i]] = 1
+                
+        return False
