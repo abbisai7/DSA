@@ -489,3 +489,34 @@ class Solution:
             d[nums[i]] = 1
                 
         return False
+
+
+
+Q: LC 781. Rabbits in Forest
+
+
+https://leetcode.com/problems/rabbits-in-forest/
+
+#rabbits reporting to us that there are this much rabbits aprat from me of the same colour
+#if the colour reported is 2, then total number of rabbits of same colour is 2+1
+import math
+
+class Solution:
+    def numRabbits(self, answers: List[int]) -> int:
+        #TC-O(n+d)
+        #SC-O(d)
+        d={}
+        
+        for i in answers:
+            if i in d:
+                d[i]+=1
+            else:
+                d[i]=1
+        ans = 0
+        
+        for i in d:
+            x = math.ceil(d[i]/(i+1))
+            ans += int((i+1)*x)
+            
+        return ans
+        
