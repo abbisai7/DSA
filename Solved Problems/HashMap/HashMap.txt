@@ -490,7 +490,38 @@ class Solution:
                 
         return False
 
+Q: LC 242. Valid Anagram
 
+#An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
+
+
+class Solution:
+    def isAnagram(self, s: str, t: str) -> bool:
+        #TC- O(s+t+d)
+        #SC- O(d)
+        d={}
+        
+        #Here we will push the elements and it no of occurcencess in the string
+        for i in s:
+            if i not in d:
+                d[i] = 1
+            else:
+                d[i]+=1      
+        
+        #Here we will iterate the another string, if the curr element is in hashmap then will reduce the count of occurcencess by 1,
+        #and if we encounter any element which is not in hashmap, then we will move that element into hashmap
+        for i in t:
+            if i in d:
+                d[i] -= 1
+            else:
+                d[i] = 1
+
+        #by the end of above for loop the hashmap should be empty, if any elements are present, then it is,
+        #not an Anagram.        
+        for i in d.values():
+            if i:
+                return False
+        return True
 
 Q: LC 781. Rabbits in Forest
 
