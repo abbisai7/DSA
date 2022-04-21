@@ -227,4 +227,60 @@ class Solution:
         
         return self.isUnivalued(root.left,val) and self.isUnivalued(root.right,val)
 
+Q: 872. Leaf-Similar Trees
+
+https://leetcode.com/problems/leaf-similar-trees/
+
+#we intialize two empty list and pass the roots twice and compare two lists
+class Solution:
+    #TC - O(m+n)
+    #SC - O(m+n)
+    def leafSimilar(self, root1: Optional[TreeNode], root2: Optional[TreeNode]) -> bool:
+        x=[]
+        y=[]
+        self.similiarLeef(root1,x)
+        self.similiarLeef(root2,y)
+        return x == y
+    
+    def similiarLeef(self,root,l):
+        if root == None:
+            return
+
+        #get value of last node and push the element to list.       
+        if root.left == None and root.right == None:
+            l.append(root.val)
+            return
+
+        #iterate to the left of tree
+        self.similiarLeef(root.left,l)
+        #iterate to the right of tree
+        self.similiarLeef(root.right,l)
+
+
+Q: 129. Sum Root to Leaf Numbers
+
+https://leetcode.com/problems/sum-root-to-leaf-numbers/
+
+
+class Solution:
+    #TC - O(n)
+    #SC- O(n)
+    def sumNumbers(self, root: Optional[TreeNode]) -> int:
+        #passing the pattern string which has root val 
+        return self.sumNum(root,str(root.val))
+    
+    def sumNum(self,root,s):
+        
+        
+        if root.left == None and root.right == None:
+            return int(s)
+        
+        a=0
+        b=0
+        if root.left != None:
+            a=int(self.sumNum(root.left,s+str(root.left.val)))
+        if root.right != None:
+            b=int(self.sumNum(root.right,s+str(root.right.val)))
+        return a+b
+
 
