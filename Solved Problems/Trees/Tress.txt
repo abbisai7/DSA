@@ -39,11 +39,16 @@ class Solution:
             return 0
         
         ans = 0
+        #ans = 1
         
         for i in root.children:
             ans = max(ans,self.height(i))
+            #ans = max(ans,1+self.height(i))
         
+        #Using 1+ans here apart from including it in the above ans, because when recursively 
+        #moving and it reaches last nodes for loop fails as it has no children.
         return 1+ans
+        #return ans
 
 
 
@@ -59,6 +64,7 @@ Q: 144. Binary Tree Preorder Traversal
 
 https://leetcode.com/problems/binary-tree-preorder-traversal/
 
+#Recursive Method
 class Solution:
     #TC - O(N)
     #SC - O(N)
@@ -77,10 +83,41 @@ class Solution:
         
         return
 
+#Iterative Method
+class Solution:
+    def preorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
+        #TC - O(N)
+        #SC - O(H)
+        answer = []
+        
+        if root == None:
+            return answer
+        
+        stack = []
+        
+        #pushing the root on to the stack
+        stack.append(root)
+        
+        #iterate until stack empty
+        #Preorder stack order- node,right,left
+        while (stack):
+            #pop the last inserted element and push into the answer
+            currentNode = stack.pop()
+            answer.append(currentNode.val)
+            
+            if currentNode.right != None:
+                stack.append(currentNode.right)
+                
+            if currentNode.left != None:
+                stack.append(currentNode.left)
+                
+        return answer
 
 Q: 589. N-ary Tree Preorder Traversal
 
 https://leetcode.com/problems/n-ary-tree-preorder-traversal/
+
+#Recursive
 
 class Solution:
     #TC- O(N)
@@ -101,12 +138,37 @@ class Solution:
         
         return
 
+#Iterative
+class Solution:
+    #TC- O(N*N)
+    #SC- O(h)
+    def preorder(self, root: 'Node') -> List[int]:
+        answer = []
+        
+        if root == None:
+            return answer
+        
+        stack = []
+        
+        stack.append(root)
+        
+        #Root, right to left of childrens
+        while (stack):
+            currentNode = stack.pop()
+            answer.append(currentNode.val)
+            for i in range(len(currentNode.children)-1,-1,-1):
+                stack.append(currentNode.children[i])
+                
+        return answer
+
 
 #PostOrder
 
 Q: 145. Binary Tree Postorder Traversal
 
 https://leetcode.com/problems/binary-tree-postorder-traversal/
+
+#Recursive
 
 class Solution:
     def postorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
@@ -125,9 +187,41 @@ class Solution:
         
         return
 
+#Iterative
+
+class Solution:
+    def postorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
+        
+        #Iterative
+        #TC - O(N)
+        #SC - O(H)
+        answer = []
+        
+        if root == None:
+            return answer
+        
+        stack = []
+        
+        stack.append(root)
+        
+        #stack - node,left,right
+        while (stack):
+            currentNode = stack.pop()
+            answer.append(currentNode.val)
+            
+            if currentNode.left != None:
+                stack.append(currentNode.left)
+                
+            if currentNode.right != None:
+                stack.append(currentNode.right)
+                
+        return answer[::-1]
 
 Q: 590. N-ary Tree Postorder Traversal
 
+https://leetcode.com/problems/n-ary-tree-postorder-traversal/
+
+#Recursive
 class Solution:
     #TC- O(N)
     #SC- O(N)
@@ -145,11 +239,39 @@ class Solution:
         l.append(root.val)
         return
 
+
+#Iterative
+
+class Solution:
+    def postorder(self, root: 'Node') -> List[int]:
+        
+        #iterative
+        
+        answer = []
+        if root == None:
+            return answer 
+        stack = []
+        
+        stack.append(root)
+        
+        while(stack):
+            currentNode = stack.pop()
+            answer.append(currentNode.val)
+            
+            #left to right of childrens
+            for i in range(0,len(currentNode.children)):
+                stack.append(currentNode.children[i])
+                
+        return answer[::-1]
+                
+
 #InOrder
 
 Q: 94. Binary Tree Inorder Traversal
 
 https://leetcode.com/problems/binary-tree-inorder-traversal/
+
+#Recursive
 
 class Solution:
     #TC - O(N)
@@ -169,6 +291,33 @@ class Solution:
         self.inOrder(root.right,l)
         
         return
+
+#Iterative
+class Solution:
+    
+    def inorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
+        
+        #iterative
+        #TC
+        #SC
+        
+        answer = []
+        
+        if root == None:
+            return answer
+        
+        stack = []
+        currentNode = root
+        while currentNode or stack:
+            while currentNode:
+                stack.append(currentNode)
+                currentNode = currentNode.left
+            
+            node = stack.pop()
+            answer.append(node.val)
+            currentNode = node.right
+                    
+        return answer
 
 Q: 617. Merge Two Binary Trees
 
