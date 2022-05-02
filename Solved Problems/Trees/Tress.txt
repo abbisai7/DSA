@@ -433,3 +433,242 @@ class Solution:
         return a+b
 
 
+
+
+Q: 257. Binary Tree Paths
+
+https://leetcode.com/problems/binary-tree-paths/
+
+class Solution:
+    def binaryTreePaths(self, root: Optional[TreeNode]) -> List[str]:
+        #TC - O(n)
+        #SC - O(x)- answer array + O(h) -recursive stack
+        l=[]
+        self.binaryPaths(root,str(root.val),l)
+        return l
+    
+    def binaryPaths(self,root,s,a):
+        #if leaf node is reached push them to the list
+        if root.left == None and root.right == None:
+            a.append(s)
+            return
+        
+        
+        if root.left != None:
+            self.binaryPaths(root.left,s+"->"+str(root.left.val),a)
+        if root.right != None:
+            self.binaryPaths(root.right,s+"->"+str(root.right.val),a)
+        return
+
+
+Q: 404. Sum of Left Leaves
+
+https://leetcode.com/problems/sum-of-left-leaves/
+
+class Solution:
+    def sumOfLeftLeaves(self, root: Optional[TreeNode]) -> int:
+        #TC - O(n)
+        #SC - O(1) + O(n)->stack
+        return self.sumOfLeftLeaf(root,False)
+            
+    def sumOfLeftLeaf(self,root,isLeftSide):
+        
+        if root == None:
+            return 0
+        
+        if root.left == None and root.right == None:
+            return root.val if isLeftSide else 0
+            
+        leftAns = self.sumOfLeftLeaf(root.left,True)
+        rightAns = self.sumOfLeftLeaf(root.right,False)
+        
+        return leftAns+rightAns
+
+Q: 112. Path Sum
+
+#Sum of all nodes from root to leaf across the path is equal to targetSum
+
+https://leetcode.com/problems/path-sum/
+
+class Solution:
+    def hasPathSum(self, root: Optional[TreeNode], targetSum: int) -> bool:
+        #TC - O(n)
+        #SC - O(1)+O(h)-recursive stack
+        return self.pathSum(root,0,targetSum)
+    
+    def pathSum(self,root,s,ts):
+        
+        if root == None:
+            return False
+        
+        if root.left == None and root.right == None:
+            if s+root.val == ts:
+                return True
+            else:
+                return False
+        
+        a = self.pathSum(root.left,s+root.val,ts)
+        b = self.pathSum(root.right,s+root.val,ts)
+        
+        return a or b
+
+
+Q: 993. Cousins in Binary Tree
+
+#give two nodes, same level different parents
+
+https://leetcode.com/problems/cousins-in-binary-tree/
+
+class Solution:
+    def isCousins(self, root: Optional[TreeNode], x: int, y: int) -> bool:
+        #TC - O(N)
+        #SC - O(1) + O(N)- Recursive Stack
+        parents = [None]*2
+        levels = [None]*2
+        
+        self.cousins(root,x,y,1,0,parents,levels)
+        return parents[0] != parents[1] and levels[0] == levels[1]
+    
+    def cousins(self,root,x,y,level,prev,parents,levels):
+        
+        if root == None:
+            return
+        
+        if root.val == x or root.val == y:
+            parents.append(prev)
+            levels.append(level)
+                
+        self.cousins(root.left,x,y,level+1,root.val,parents,levels)
+
+        self.cousins(root.right,x,y,level+1,root.val,parents,levels)
+        
+        return
+
+Q: 100. Same Tree
+
+https://leetcode.com/problems/same-tree/
+
+The strategy is to compare the current p and q, and then compare p's left node with q's left node, then p's right node with q's right node. If at any point they are not equal return False (# [3]). The terminating conditions for the recursion are:
+ 1. if both trees have reached the end (# [1]), and 2. one tree reaches the end, but the other doesn't (# [2]).
+
+class Solution:
+    #TC&SC - O(min(m,n))
+    def isSameTree(self, p: Optional[TreeNode], q: Optional[TreeNode]) -> bool:
+        if p == None and q == None:
+            return True
+        
+        if p == None or q == None or p.val != q.val:
+            return False
+         
+        return self.isSameTree(p.left,q.left) and self.isSameTree(p.right,q.right)
+
+Q: 226. Invert Binary Tree
+
+https://leetcode.com/problems/invert-binary-tree/
+
+#Find its mirrior image
+
+class Solution:
+    def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        #TC - O(N)
+        #SC - O(N)+O(h)
+        return self.invert(root)
+    
+    def invert(self,root):
+        
+        if root == None:
+            return
+        
+        a = self.invert(root.left)
+        b = self.invert(root.right)
+        
+        root.right = a
+        root.left = b
+        
+        return root
+
+
+Q: 101. Symmetric Tree
+
+#return tree if left subtree and righ subtree are equal or false
+https://leetcode.com/problems/symmetric-tree/
+
+class Solution:
+    def isSymmetric(self, root: Optional[TreeNode]) -> bool:
+        #TC - O(N)
+        #SC - O(1) + O(h)- recursive stack
+        return self.isTrue(root.left,root.right)
+    
+    def isTrue(self,p,q):
+        if p == None and q == None:
+            return True
+        
+        if p == None or q == None or p.val != q.val:
+            return False
+        
+        #if p.val == q.val:
+            #return True
+        
+        
+        return self.isTrue(p.left,q.right) and self.isTrue(q.left,p.right)
+
+
+Q: Print all nodes that don't have a sibling - gfg
+
+https://practice.geeksforgeeks.org/problems/print-all-nodes-that-dont-have-sibling/1/#
+
+def noSibling(root):
+    # code here
+    l=[]
+    noSib(root,l)
+    return sorted(l) if l else [-1]
+    
+
+def noSib(root,l):
+    
+    
+    if root.left == None and root.right == None:
+        return 
+    
+    if root.left != None and root.right == None:
+        l.append(root.left.data)
+    if root.right != None and root.left == None:
+        l.append(root.right.data)
+        
+    if root.left!= None:
+        noSib(root.left,l)
+    if root.right!=None:
+        noSib(root.right,l)
+
+
+Q: 199. Binary Tree Right Side View
+
+https://leetcode.com/problems/binary-tree-right-side-view/
+
+class Solution:
+    def rightSideView(self, root: Optional[TreeNode]) -> List[int]:
+        #TC - O(N)
+        #SC - O(N)+O(N)+O(H)
+        maxLevel = [0]
+        l=[]
+        
+        self.rightSide(root,maxLevel,l,1)
+        
+        return l
+    
+    def rightSide(self,root,maxLevel,l,level):
+        
+        if root == None:
+            return 
+        
+        #This is used to kept track of levels
+        if maxLevel[0]<level:
+            maxLevel[0] = level
+            l.append(root.val)
+            
+        
+        self.rightSide(root.right,maxLevel,l,level+1)
+        self.rightSide(root.left,maxLevel,l,level+1)
+        
+        return
+#Left side view the only thing which changes is root.left and root.right next
