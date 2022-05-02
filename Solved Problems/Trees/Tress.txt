@@ -612,6 +612,28 @@ class Solution:
         
         return self.isTrue(p.left,q.right) and self.isTrue(q.left,p.right)
 
+Q: Siblings in a binary tree gfg
+
+def CheckIfNodesAreSiblings(root, data_one,
+								data_two):
+	
+	if (root == None):
+		return False
+
+	# Compare the two given nodes with
+	# the childrens of current node
+	if root.left!= None and root.right!= None:
+	    
+	    if root.left.data == data_one and root.right.data == data_two:
+	        return True
+	    
+	    if root.left.data == data_two and root.right.data == data_one:
+	        return True
+	
+	a = CheckIfNodesAreSiblings(root.left,data_one,data_two)
+	b = CheckIfNodesAreSiblings(root.right,data_one,data_two)
+	
+	return a or b
 
 Q: Print all nodes that don't have a sibling - gfg
 
