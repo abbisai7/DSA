@@ -693,4 +693,123 @@ class Solution:
         self.rightSide(root.left,maxLevel,l,level+1)
         
         return
+
+
+#DFS Method
+
+class Solution:
+    def rightSideView(self, root: Optional[TreeNode]) -> List[int]:
+        #TC - O(N)
+        #SC - O(N)+O(H)- recursive stack
+        l=[]
+        
+        self.rightSide(root,l,0)
+        
+        return l
+    
+    def rightSide(self,root,l,level):
+        
+        if root == None:
+            return 
+        
+        #checking whether the current level is equal to the len
+        if len(l)==level:
+            l.append(root.val)
+            
+        
+        self.rightSide(root.right,l,level+1)
+        self.rightSide(root.left,l,level+1)
+        
+        return
+
+
 #Left side view the only thing which changes is root.left and root.right next
+
+
+
+Q: Top View of Binary Tree - gfg
+
+https://practice.geeksforgeeks.org/problems/top-view-of-binary-tree/1/#
+
+https://www.tutorialcup.com/interview/tree/top-view-of-binary-tree.htm
+
+class Solution:
+    
+    #Function to return a list of nodes visible from the top view 
+    #from left to right in Binary Tree.
+    def topView(self,root):
+        
+        # code here
+        
+        d = {}
+        val = [100000001,-1000000001]
+        
+        self.TopView(root,d,0,val,0)
+        
+        #print(d)
+        ans = []
+        for i in range(val[0],val[1]+1):
+            ans.append(d[i][0])
+        return ans
+        
+        
+    def TopView(self,root,memo,hd,val,level):
+        
+        if root == None:
+            return
+        
+        #if it has no entry in HashMap, will put or else if it has been pushed at higher level and if we found 
+        # the distance again at lower level we will push that element
+        if hd not in memo or level < memo[hd][1]:
+            val[0] = min(val[0],hd)
+            val[1] = max(val[1],hd)
+            memo[hd] = (root.data,level)
+            
+        self.TopView(root.left,memo,hd-1,val,level+1)
+        self.TopView(root.right,memo,hd+1,val,level+1)
+        
+        return
+
+
+Q: Bottom view of Binary Tree - gfg
+
+https://practice.geeksforgeeks.org/problems/bottom-view-of-binary-tree/1
+
+#The difference between the topView and button view is ,we take all the nodes below, and only the if condition changes.
+
+class Solution:
+    def bottomView(self, root):
+
+        #TC - O(n)
+        #SC - O(n)
+        # code here
+        
+        d = {}
+        ans = []
+        val = [1000001,-100001]
+        self.BottomView(root,d,val,0,0)
+        
+        #print(val)
+        for i in range(val[0],val[1]+1):
+            ans.append(d[i][0])
+         
+        return ans   
+    
+    def BottomView(self, root, d, val, level, hd):
+        
+        if root == None:
+            return
+        
+        # if hd not in memo or the level found is greater than or equal to the one in memo
+        if hd not in d or level >= d[hd][1]:
+            val[0] = min(val[0],hd)
+            val[1] = max(val[1],hd)
+            d[hd] = (root.data,level)
+            
+            
+        self.BottomView(root.left,d,val,level+1,hd-1)
+        self.BottomView(root.right,d,val,level+1,hd+1)
+        
+        
+        return
+            
