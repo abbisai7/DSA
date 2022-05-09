@@ -813,3 +813,328 @@ class Solution:
         
         return
             
+Q: 863. All Nodes Distance K in Binary Tree
+
+https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree/
+
+
+
+class Solution:
+    def distanceK(self, root: TreeNode, target: TreeNode, k: int) -> List[int]:
+        
+        #TC - O(n) + O(n)
+        #SC - O(n) + O(n) + O(k)
+
+        #this get parents for all nodes, so it is useful to traverse upwards
+        parents = self.getParents(root,None,{})
+        return self.iterateTree(target,parents,k,[],{})
+    
+    def iterateTree(self,target,parents,k,l,visited):
+        
+        #if the node has been visitied and root becomes none
+        if target == None or target.val in visited:
+            return
+        
+        #if the distance is 0 then add the list
+        if k == 0:
+            l.append(target.val)
+        
+        #marking the nodes which has been visited
+        visited[target.val] = 1
+        
+        #iterate over left,right and parents and decrease k by 1
+        self.iterateTree(target.left,parents,k-1,l,visited)
+        self.iterateTree(target.right,parents,k-1,l,visited)
+        self.iterateTree(parents[target.val],parents,k-1,l,visited)
+            
+        return l
+    
+    def getParents(self, root, prev, memo):
+        
+        if root == None:
+            return
+        
+        #store the parent node link
+        memo[root.val] = prev
+        
+        self.getParents(root.left,root,memo)
+        self.getParents(root.right,root,memo)
+        
+        return memo
+
+
+
+Level order Traversal(BFS)
+
+Level order traverses by levels, first level0 and then level and level2 and so on........
+
+# we use queue for implementing for BFS
+
+Q: Level order traversal 
+
+https://practice.geeksforgeeks.org/problems/level-order-traversal/1/
+
+from collections import deque
+
+class Solution:
+    #Function to return the level order traversal of a tree.
+    def levelOrder(self,root ):
+        # Code here
+        q = deque()
+        l = []
+        
+        q.append(root)
+        while(q):
+            x=q.popleft()
+            l.append(x.data)
+            
+            if x.left != None:
+                q.append(x.left)
+            if x.right != None:
+                q.append(x.right)
+            
+        return l
+
+
+Q: 102. Binary Tree Level Order Traversal
+
+https://leetcode.com/problems/binary-tree-level-order-traversal/
+
+
+from collections import deque
+class Solution:
+    def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
+        l = []
+        d = deque()
+        
+        if root == None:
+            return []
+        
+        d.append(root)
+        
+        while(d):
+            # find the size of queue, because size represents number of nodes
+            # at any level
+            
+            currentSize = len(d)
+            a = []
+            while currentSize:
+                x = d.popleft()
+                a.append(x.val)
+                
+                if x.left != None:
+                    d.append(x.left)
+                if x.right != None:
+                    d.append(x.right)
+                currentSize -=1   
+            l.append(a)
+            
+        return l
+
+Q: 429. N-ary Tree Level Order Traversal
+
+https://leetcode.com/problems/n-ary-tree-level-order-traversal/
+
+from collections import deque
+class Solution:
+    def levelOrder(self, root: 'Node') -> List[List[int]]:
+        q = deque()
+        l = []
+        
+        
+        if root == None:
+            return []
+        q.append(root)
+        
+        while(q):
+            currentSize = len(q)
+            
+            a = []
+            while currentSize:
+                x = q.popleft()
+                a.append(x.val)
+            
+                for i in x.children:
+                    q.append(i)
+                    
+                currentSize -= 1
+            
+            l.append(a)
+                
+        return l
+
+Q: 107. Binary Tree Level Order Traversal II
+
+https://leetcode.com/problems/binary-tree-level-order-traversal-ii/
+
+class Solution:
+    def levelOrderBottom(self, root: Optional[TreeNode]) -> List[List[int]]:
+        
+        l = []
+        d = deque()
+        
+        if root == None:
+            return []
+        
+        d.append(root)
+        
+        while(d):
+            # find the size of queue, because size represents number of nodes
+            # at any level
+            
+            currentSize = len(d)
+            a = []
+            while currentSize:
+                x = d.popleft()
+                a.append(x.val)
+                
+                if x.left != None:
+                    d.append(x.left)
+                if x.right != None:
+                    d.append(x.right)
+                currentSize -=1   
+            l.append(a)
+            
+        return l[::-1]
+
+
+Q: 104. Maximum Depth of Binary Tree
+
+https://leetcode.com/problems/maximum-depth-of-binary-tree/
+
+from collections import deque
+class Solution:
+    #BFS
+    def maxDepth(self, root: Optional[TreeNode]) -> int:
+        q = deque()
+        
+        q.append(root)
+        
+        if root == None:
+            return 0
+        
+        height = 0
+        
+        while(q):
+            size = len(q)
+            
+            while size:
+                x = q.popleft()
+                
+                if x.left != None:
+                    q.append(x.left)
+                    
+                if x.right != None:
+                    q.append(x.right)
+                
+                size -= 1
+            height += 1
+        
+        return height
+
+
+Q: 965. Univalued Binary Tree
+
+https://leetcode.com/problems/univalued-binary-tree/
+
+
+class Solution:
+    #TC - O(N)
+    #SC - O(1)
+    def isUnivalTree(self, root: Optional[TreeNode]) -> bool:
+        #BFS
+        q = deque()
+        
+        q.append(root)
+        
+        if root == None:
+            return 0
+        
+        y = root.val
+        
+        while(q):
+            x = q.popleft()
+            
+            if x.val != y:
+                return False
+            if x.left != None:
+                q.append(x.left)
+                    
+            if x.right != None:
+                q.append(x.right)
+                
+            
+        
+        return True
+
+
+Q: 637. Average of Levels in Binary Tree
+
+https://leetcode.com/problems/average-of-levels-in-binary-tree/
+
+
+class Solution:
+    def averageOfLevels(self, root: Optional[TreeNode]) -> List[float]:
+        l = []
+        d = deque()
+        
+        if root == None:
+            return []
+        
+        d.append(root)
+        
+        while(d):
+            # find the size of queue, because size represents number of nodes
+            # at any level
+            
+            currentSize = len(d)
+            count = currentSize
+            s = 0
+            while currentSize:
+                x = d.popleft()
+                
+                s += x.val
+                if x.left != None:
+                    d.append(x.left)
+                if x.right != None:
+                    d.append(x.right)
+                currentSize -=1   
+            l.append(s/count)
+            
+            
+        return l
+
+
+Q: 100. Same Tree(DFS)
+
+https://leetcode.com/problems/same-tree/
+
+
+from collections import deque
+class Solution:
+    def isSameTree(self, p: Optional[TreeNode], q: Optional[TreeNode]) -> bool:
+        queue = deque()
+        
+        #adding as pairs in queue
+        queue.append((p,q))
+    
+        while queue:
+            #dequeuing pairs
+            curNode1, curNode2 = queue.popleft()
+
+            #if both are none
+            if curNode1 == None and curNode2 == None:
+                continue
+            
+            if curNode1 == None or curNode2 == None or curNode1.val != curNode2.val:
+                return False
+            
+            
+            if curNode1.left != None or curNode2.left != None:
+                queue.append((curNode1.left, curNode2.left))
+            if curNode1.right != None or curNode2.right != None:
+                queue.append((curNode1.right, curNode2.right))
+    
+        return True
+            
+
