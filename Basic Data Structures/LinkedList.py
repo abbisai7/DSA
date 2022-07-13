@@ -132,7 +132,7 @@ class LinkedList:
         current = self.head
 
         while current:
-            next = current.next
+            next = current.next#7
             current.next = prev
             prev = current
             current = next
@@ -179,6 +179,14 @@ class LinkedList:
         if right:
             dummy_ptr.next = right
         return head_ptr.next
+
+
+    def addInBetween(self,n1,n2,val):
+        node = Node(val)
+        n1.next = node
+        node.next = n2
+        
+
 
 
 

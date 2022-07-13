@@ -1,0 +1,22 @@
+https://www.geeksforgeeks.org/minimum-number-of-distinct-elements-after-removing-m-items/
+
+k distance
+inorder
+
+GFG       Level order traversal
+102	Binary Tree Level Order Traversal
+429	N-ary Tree Level Order Traversal
+107	Binary Tree Level Order Traversal I
+
+
+5/7
+max depth
+univalued
+average of levels in bt
+bt tilt
+
+
+5/10
+
+k distance dfs
+

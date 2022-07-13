@@ -1,0 +1,395 @@
+#Graph Problems
+
+#Graph Traversal
+
+#1.DFS of a graph
+
+#DFS searches the graph depth wise
+
+https://practice.geeksforgeeks.org/problems/depth-first-traversal-for-a-graph/1/#
+
+class Solution:
+    
+    #Function to return a list containing the DFS traversal of the graph.
+    def dfsOfGraph(self, V, adj):
+        # code here
+        #TC - O(v+e)
+        #SC - O(v)+O(v)
+        ans = []
+        #visiited is used to keep track of nodes visited
+        visited = [False]*V
+        
+        self.dfs(V,adj,0,ans,visited)
+        
+        return ans
+        
+    def dfs(self,V,adj,curIdx,ans,visited):
+        
+        #if a node has already has been visited return 
+        if visited[curIdx] == True:
+            return
+        
+        #we will mark the node as node as visited and push it into answer array
+        visited[curIdx] = True
+        ans.append(curIdx)
+        
+        # for a currennt node we will traverse thorught it edges
+        for i in adj[curIdx]:
+            self.dfs(V,adj,i,ans,visited)
+            
+        return
+
+#2. BFS of a graph
+
+https://practice.geeksforgeeks.org/problems/bfs-traversal-of-graph/1/#
+
+from collections import deque
+class Solution:
+    
+    #Function to return Breadth First Traversal of given graph.
+    def bfsOfGraph(self, V, adj):
+        # code here
+        #TC - O(v+e)
+        #SC - O(v)+O(v)
+        ans = []
+        visited = [False]*V
+        
+        q = deque()
+        q.append(0)
+        
+        while q:
+            n = q.popleft()
+            
+            # if already node is visited conintue
+            if visited[n] == True:
+                continue
+            
+            #if not visited mark the node as visited and push it into ans
+            visited[n] = True
+            ans.append(n)
+            
+            #push it currentNode edges into push
+            for i in adj[n]:
+                q.append(i)
+                
+                
+        return ans
+
+
+
+3.997 Find the Town Judge
+
+https://leetcode.com/problems/find-the-town-judge/
+
+
+#the trick here is every one beleives judge but judge doesnt believe anyone
+#so the incoming degree to the judge will be equal to n-1 and outgoing degree is 0.
+#Here [1,2]->means 1 trust'2 which incoming degree to 2 is 1, and outgoing degree to 1 is 1
+class Solution:
+    def findJudge(self, n: int, trust: List[List[int]]) -> int:
+        #TC - O(N)+O(N)
+        #SC - O(N)+O(N)
+        #for every node we will store it incoming and outcoming degree
+        #here used n+1 because it 1 based indexed, to include last element,we use n+1
+        inDegree = [0]*(n+1)
+        outDegree = [0]*(n+1)
+        
+        #iterate over the given list
+        for i in trust:
+            a = i[0]
+            b = i[1]
+            
+            #increment the indegree and outgree of elements 
+            inDegree[b] += 1
+            outDegree[a] += 1
+        
+        #checking for all the elements if they have met the problem 
+        for i in range(1,n+1):
+            if inDegree[i] == n-1 and outDegree[i] == 0:
+                return i
+            
+        return -1
+            
+
+
+Q: The Celebrity Problem
+
+https://practice.geeksforgeeks.org/problems/the-celebrity-problem/1
+
+class Solution:
+    
+    #Function to find if there is a celebrity in the party or not.
+    def celebrity(self, M, n):
+        # code here 
+        #TC - O(N*N) + O(N)
+        #SC - O(N) + O(N)
+        inDegree = [0]*(n)
+        outDegree = [0]*(n)
+        
+        # given is a adjacency matrix
+        # at any instance value is 1, means that (I,J) i knows j, so we increment 
+        #ouutdegree for i and indegree for j 
+        for i in range(n):
+            for j in range(n):
+                if M[i][j] == 1:
+                    inDegree[j] += 1
+                    outDegree[i] += 1
+        
+        #checking for all the elements if they have met the problem  
+        for i in range(0,n):
+            if inDegree[i] == n-1 and outDegree[i] == 0:
+                return i
+            
+        return -1
+
+Q:547. Number of Provinces
+
+https://leetcode.com/problems/number-of-provinces/
+
+
+#if there are connected vertex, then the whole graph is one province
+#given input is adjacency matrix, which means curIdx list repesents the nodes to which it is connected.
+from collections import deque
+class Solution:
+    def findCircleNum(self, isConnected: List[List[int]]) -> int:
+        ans = 0
+        n = len(isConnected)
+        visited = [False]*n
+        
+        for i in range(n):
+            #if that node is not visited we will perform traverasl to find the connected vertex to it and mark all of them as visted
+            if visited[i] == False:
+                self.dfs(isConnected,n,visited,i)
+                ans += 1
+                
+        return ans
+    
+    def dfs(self,isConnected,n,visited,currentCity):
+        
+        if visited[currentCity]:
+            return
+        
+        visited[currentCity] = True
+        #get the list of vertex connected for one index
+        curNeigh = isConnected[currentCity]
+        
+        # if the value is 1 means that presernt node is connected to that index element
+        for j in range(n):
+            if curNeigh[j] == 1:
+                self.dfs(isConnected,n,visited,j)
+        return
+                
+    
+    def bfs(self,isConnected,ans,n,visited,currentCity):
+        
+        q = deque()
+        q.append(currentCity)
+        
+        while q:
+            node = q.popleft()
+            
+            if visited[node] == True:
+                continue
+            
+            visited[node] = True
+            curNeigh = isConnected[node]
+            
+            for i in range(n):
+                if curNeigh[i] == 1:
+                    q.append(i)
+
+
+
+Q: 200. Number of Islands
+
+https://leetcode.com/problems/number-of-islands/
+
+#we can move either up,down,left and right
+from collections import deque
+class Solution:
+    def numIslands(self, grid: List[List[str]]) -> int:
+        #TC - O(M*N)
+        ans = 0
+        m = len(grid)
+        n = len(grid[0])
+        
+        for curRow in range(m):
+            for curCol in range(n):
+                #to check whether the start is land or water
+                if grid[curRow][curCol] == "1":
+                    self.sinkIslandBfs(curRow,curCol,m,n,grid)
+                    ans +=1
+        return ans
+    
+    def sinkIslandDfs(self,curRow,curCol,m,n,grid):
+        
+        #if the row or excedds their limit and if present values is water
+        if curRow < 0 or curRow >=m or curCol<0 or curCol >=n or grid[curRow][curCol] == '0':
+            return
+        
+        #mark the visietd as with 0 to restrict under flow
+        grid[curRow][curCol] ='0'
+        
+        #move up,down,left and right
+        self.sinkIsland(curRow-1,curCol,m,n,grid)
+        self.sinkIsland(curRow+1,curCol,m,n,grid)
+        self.sinkIsland(curRow,curCol-1,m,n,grid)
+        self.sinkIsland(curRow,curCol+1,m,n,grid)
+        
+        return
+    
+    def sinkIslandBfs(self,curRow,curCol,m,n,grid):
+        
+        q = deque()
+        
+        q.append((curRow,curCol))
+        
+        while q:
+            r,c = q.popleft()
+            # r = x[0]
+            # c = x[1]
+            
+            if r < 0 or r >=m or c<0 or c >=n or grid[r][c] == '0':
+                continue
+            grid[r][c] ='0'
+            
+            q.append((r-1,c))
+            q.append((r+1,c))
+            q.append((r,c-1))
+            q.append((r,c+1))
+
+
+Q: 733. Flood Fill
+
+https://leetcode.com/problems/flood-fill/
+
+#replace all the give r,c values with gieven value
+class Solution:
+    def floodFill(self, image: List[List[int]], sr: int, sc: int, newColor: int) -> List[List[int]]:
+        
+        #TC - O(M*N)
+        
+        m = len(image)
+        n = len(image[0])
+        
+        #if it is already has been marked with the value, just return original image
+        if image[sr][sc] == newColor:
+            return image
+        
+        self.dfs(sr,sc,image,newColor,m,n,image[sr][sc])
+                
+        return image
+    
+    def dfs(self,curRow,curCol,grid,newColor,m,n,color):
+        #if the row and col has reached their limit and current r,c value has already been changed
+        if curRow < 0 or curRow >=m or curCol<0 or curCol >=n or grid[curRow][curCol] != color:
+            return
+        
+        grid[curRow][curCol] = newColor
+        
+        #move up,down,left,right
+        self.dfs(curRow-1,curCol,grid,newColor,m,n,color)
+        self.dfs(curRow+1,curCol,grid,newColor,m,n,color)
+        self.dfs(curRow,curCol-1,grid,newColor,m,n,color)
+        self.dfs(curRow,curCol+1,grid,newColor,m,n,color)
+        
+        return
+
+
+
+
+Q: Detect cycle in a directed graph
+
+https://practice.geeksforgeeks.org/problems/detect-cycle-in-a-directed-graph/1/#
+
+
+from collections import deque
+class Solution:
+    
+    #Function to detect cycle in a directed graph.
+    def isCyclic(self, V, adj):
+        # code here
+        #BFS(Khans Algorithm)
+        visited=[False]*V
+        q = deque()
+        inDegree = [0]*V
+        #this is used to keep track vertices traversed in queue
+        visitedVertex = 0
+        
+        #finding indegree of all vertices
+        for i in adj:
+            for j in i:
+                inDegree[j] += 1
+                
+        #push all the vertex into queue which has indegree of 0       
+        for i in range(V):
+            if inDegree[i] == 0:
+                q.append(i)
+                
+                
+        while q:
+            curVertex = q.popleft()
+            
+            #if the vertex has been already has been visited
+            if visited[curVertex] == True:
+                continue
+            #mark vertex has visited
+            visited[curVertex] = True
+            visitedVertex += 1
+            #iterate over with connccted vertices
+            for i in adj[curVertex]:
+                #decrease indegree by 1
+                inDegree[i] -= 1
+                
+                #if indegree becomes push into queue
+                if inDegree[i] == 0:
+                    q.append(i)
+                    
+        #if all all nodes are not visited then it has cycle,then the count of viisted vertices
+        #will not be equal to no of vertices
+        return visitedVertex != V
+        
+        
+    #     #DFS
+        
+    #     #visited is used to keep track of vertices which has been already visited
+    #     visited = [False]*(V)
+    #     #this stack stores the element which are currently being iterated
+    #     recStack = [False]*(V)
+        
+    #     #start iterating from 0 th vertex
+    #     for curVertex in range(V):
+            
+    #         #if the vertex is not already visited and function returns true then true
+    #         if visited[curVertex] == False and self.hasCycle(adj,curVertex,visited,recStack):
+    #             return True
+                
+    
+    #     return False
+        
+        
+    # def hasCycle(self,adj,curVertex,visited,recStack):
+        
+    #     #marking the curVetrex as visited
+    #     visited[curVertex] = True
+        
+    #     #marking the curVertex also true in recStack
+    #     recStack[curVertex] =True
+    #     #getting next connected for current vertex
+    #     nextVertex = adj[curVertex]
+        
+        
+    #     for i in nextVertex:
+            
+    #         #if it not visted , we will do dfs for the next vertices
+    #         if visited[i] == False and self.hasCycle(adj,i,visited,recStack):
+    #             return True
+                
+    #         #if the current Node is already in recStack
+    #         elif recStack[i] == True:
+    #             return True
+         
+    #     #if any of the above fails backtrack the curVertex to false and return False       
+    #     recStack[curVertex] = False
+        
+    #     return False
