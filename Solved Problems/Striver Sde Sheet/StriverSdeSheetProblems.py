@@ -170,3 +170,269 @@ class Solution:
                 totalSum = 0
         
         return maxSum 
+
+
+#5. Sort Colors
+#https://leetcode.com/problems/sort-colors/
+
+class Solution:
+    def sortColors(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        #Dutch National Flag algorithm
+        #TC - O(N)
+        #SC - O(1)
+        #a[0,low-1]-0's
+        #a[high+1,n]-2's
+        #middle we will have 1's
+        low = 0
+        mid = 0
+        high = len(nums)-1
+        
+        while mid<=high:
+            
+            #if mid is 0 swap both low and mid pointer values and increment their pos
+            if nums[mid] == 0:
+                nums[low],nums[mid] = nums[mid],nums[low]
+                low+=1
+                mid+=1
+            
+            #if mid is 1 just increment the index
+            elif nums[mid] == 1:
+                mid+=1
+            
+            #if mid is 2 swap it with high, and just decrement high
+            elif nums[mid] == 2:
+                nums[mid], nums[high] = nums[high],nums[mid]
+                high-=1
+                
+                
+                
+        #TC - O(N)+O(N)
+        #SC - O(1)
+        count0 =0
+        count1 = 0
+        count2 = 0
+        
+        for i in nums:
+            if i==0:
+                count0 +=1
+            elif i==1:
+                count1 +=1
+                
+            else:
+                count2 += 1
+        i=0        
+        while count0>0:
+            nums[i]=0
+            count0 -= 1
+            i+=1
+        
+        while count1>0:
+            nums[i]=1
+            i+=1
+            count1 -=1
+            
+        while count2>0:
+            nums[i]=2
+            i+=1
+            count2 -=1
+
+
+
+#6.Best Time to Buy and Sell Stock
+#https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
+
+
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        
+        #Striiver approach
+        #TC - O(N)
+        #SC - O(1)
+        minValue = 100001
+        maxPrice = 0
+        
+        for i in prices:
+            #store the value in the array
+            minValue = min(minValue,i)
+            #minus every element with minValue and store max of it
+            maxPrice = max(maxPrice,i-minValue)
+            
+        return maxPrice
+#         #Brute Foce
+#         #TC - O(N*N)
+#         #SC - O(1)
+#         maxProfit = 0
+        
+#         for i in range(len(prices)):
+#             for j in range(i,len(prices)):
+#                 if prices[j]>prices[i]:
+#                     maxProfit=max(maxProfit,prices[j]-prices[i])
+                    
+#         return maxProfit
+        
+
+
+#Day-2(13/07/2022)
+
+#1.Rotate Image
+
+#https://leetcode.com/problems/rotate-image/
+
+class Solution:
+    def rotate(self, matrix: List[List[int]]) -> None:
+        """
+        Do not return anything, modify matrix in-place instead.
+        """
+#         #TC - O(N*N)+O(1)
+#         #SC - O(1)
+        
+#         #first calculating transpose of the matrix
+#         for i in range(len(matrix)):
+#             #using i because instead of 0 because it may reswap elements
+#             for j in range(i,len(matrix[0])):
+#                 matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
+                
+#         #and then reverse each row to get ouptut     
+#         for i in range(len(matrix)):
+#             matrix[i].reverse()
+                
+                
+        #Brute Force
+        #TC - O(N*N)
+        #SC - O(N*N)
+        
+        res = [[-1 for _ in range(len(matrix[0]))]for i in range(len(matrix))]
+        n=len(matrix)-1
+        for i in range(len(matrix)):
+            for j in range(len(matrix[0])):
+                res[i][j] = matrix[n-j][i]
+                print(res[i][j])
+
+
+#2 Merge Intervals
+
+#https://leetcode.com/problems/merge-intervals/
+
+class Solution:
+    def merge(self, intervals: List[List[int]]) -> List[List[int]]:
+        
+        #Strivers approach
+        #TC - O(N)+O(NLogN)
+        
+        res = []
+        
+        #sorting the list based on first elemnet
+        intervals.sort(key = lambda x:x[0])
+        
+        #start first elem of first elem
+        start = intervals[0][0]
+        #second elem of firsrt elem
+        end = intervals[0][1]
+        
+        #iterarting over the interavls
+        for i in intervals:
+            #if current List start is less than ennd then update end
+            if i[0] <= end:
+                end = max(end,i[1])
+            #push the currents start and end to res and update start and end with current Pair
+            else:
+                res.append([start,end])
+                start = i[0]
+                end = i[1]
+        #[[1,5]]- edge case
+        res.append([start,end])
+        
+        return res
+        
+        #Brute Force
+        #TC - O(NLogn)+O(N*N)
+        #SC - O(N)
+        res =[]
+        #first we sort based on first element of list
+        intervals.sort(key=lambda x:x[0])
+        
+        #then iterate over list
+        for i in range(len(intervals)):
+            
+            start = intervals[i][0]
+            end = intervals[i][1]
+            
+            #if already there is a value in res
+            if res:
+                #check whether current Interval has already been merged
+                #current Start is less than last pushed elemet end
+                if start <= res[-1][1]:
+                    continue
+                    
+                    
+            for j in range(i+1,len(intervals)):
+                #if start is less than previous end
+                if intervals[j][0]<=end:
+                    #checking for max end
+                    end = max(end,intervals[j][1])
+            #at last push the pair        
+            res.append([start,end])
+            
+        return res
+
+
+
+#3.Merge Sorted Array
+
+#https://leetcode.com/problems/merge-sorted-array/
+
+
+class Solution:
+    def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:
+        """
+        Do not return anything, modify nums1 in-place instead.
+        """
+        #TC - O(M+N)
+        #SC - O(1)
+        
+        #last positions
+        j=n-1
+        #given non 0 value positon
+        i=m-1
+        k=len(nums1)-1
+        
+        #same as merging in merge sort
+        #but we will move from back side
+        while i>=0 and j>=0:
+            #if second row elements is greater than non 0th element push it to back and decrement j
+            if nums2[j]>nums1[i]:
+                nums1[k]=nums2[j]
+                j-=1
+            #if non 0th element is greater than nusm2 the element push non 0th element current pos
+            else:
+                nums1[k] = nums1[i]
+                i-=1
+            k-=1
+        
+        #anything unvisited push it to the front
+        while i>=0:
+            nums1[k]= nums1[i]
+            i-=1
+            k-=1
+        
+        while j>=0:
+            nums1[k] = nums2[j]
+            j-=1
+            k-=1
+                
+                
+        
+            
+            
+        
+#         #TC - O(m+n)log(m+n)
+#         #SC - O(1)
+#         j=0
+#         for i in range(m,m+n):
+#             nums1[i] = nums2[j]
+#             j+=1
+            
+#         nums1.sort()
