@@ -73,14 +73,14 @@
 
 l = [1,6,8,2,7,4,5]
 
-def merge(A,beg,end,mid):
-    temp=[0]*(end+1)
+def merge(A,temp,beg,end,mid):
+    #temp=[0]*(end+1)
 
     i = beg
     j = mid+1
     idx=beg
     while i<=mid and j<=end:
-        if A[i] < A[j]:
+        if A[i] <= A[j]:
             temp[idx] = A[i]
             idx += 1
             i+=1
@@ -105,16 +105,16 @@ def merge(A,beg,end,mid):
         A[k] = temp[k]
     
 
-def mergeSort(A,beg,end):
+def mergeSort(A,temp,beg,end):
     #run til end is greater than beginning
     if beg<end:
         mid = (beg+end)//2
-        mergeSort(A,beg,mid)
-        mergeSort(A,mid+1,end)
-        merge(A,beg,end,mid)
+        mergeSort(A,temp,beg,mid)
+        mergeSort(A,temp,mid+1,end)
+        merge(A,temp,beg,end,mid)
 
-
-mergeSort(l,0,len(l)-1)
+temp =[0]*len(l)
+mergeSort(l,temp,0,len(l)-1)
 print(l)
 
 #Time Complexity

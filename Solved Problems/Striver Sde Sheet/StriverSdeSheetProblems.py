@@ -436,3 +436,236 @@ class Solution:
 #             j+=1
             
 #         nums1.sort()
+
+
+
+#Merge sorted Array another version
+
+#https://practice.geeksforgeeks.org/problems/merge-two-sorted-arrays-1587115620/1#
+
+import math
+class Solution:
+    
+    #Function to merge the arrays.
+    def merge(self,arr1,arr2,n,m):
+        #code here
+        
+        #Gap Method
+        
+        #TC - O(nlogn)
+        
+        t = n+m
+        #we will take ceil 
+        gap = math.ceil(t/2)
+        #iterate until gap is 0
+        while gap>0:
+            i=0
+            j=gap
+            
+            while j<n+m:
+                if j<n and arr1[i]>arr1[j]:
+                    arr1[i], arr1[j] = arr1[j], arr1[i]
+                #j-n beacuse arr2 has index 0 so accesing the elemnet based on first arry lenght
+                elif i<n and j>=n and arr1[i]>arr2[j-n]:
+                    arr1[i],arr2[j-n] = arr2[j-n],arr1[i]
+                elif i>=n and j>=n and arr2[i-n]>arr2[j-n]:
+                    arr2[i-n], arr2[j-n] = arr2[j-n],arr2[i-n]
+                i+=1
+                j+=1
+            #for 1 we will assign 0 directly as ceil(1/2) gives 2
+            if gap == 1:
+                gap = 0
+            else:
+                gap = math.ceil(gap/2)
+            
+        
+        #TC - O(n*m)
+        #SC - O(1)
+        # for i in range(n):
+        #     #if current element of first array is greater than first element of
+        #     if arr1[i]>arr2[0]:
+        #         arr1[i],arr2[0] = arr2[0], arr1[i]
+            
+        #     #pushing the swapped element to correct position in arr2
+        #     first = arr2[0]
+        #     k=1
+        #     while k<m and arr2[k]<first:
+        #         arr2[k-1] = arr2[k]
+        #         k+=1
+                    
+        #     arr2[k-1] = first
+        
+        
+                    
+            
+        #Brute Force
+        # #TC - O((m+n)log(m+n))
+        # #SC - O(M+N)
+        # arr3=[]
+        
+        # for i in arr1:
+        #     arr3.append(i)
+            
+        # for i in arr2:
+        #     arr3.append(i)
+            
+        
+        # arr3.sort()
+        # k=0
+        # for i in range(len(arr1)):
+        #     arr1[i] = arr3[k]
+        #     k+=1
+        
+        
+        # for i in range(len(arr2)):
+        #     arr2[i] = arr3[k]
+        #     k+=1
+            
+        # return arr3
+
+#4.Find the Duplicate Number
+
+#https://leetcode.com/problems/find-the-duplicate-number/
+
+
+class Solution:
+    def findDuplicate(self, nums: List[int]) -> int:
+        
+        #TC - O(N)
+        #SC - O(1)
+    
+        #intilaize this first index value
+        slow = nums[0]
+        fast = nums[0]
+        
+        #tortise method
+        while True:
+            #slow will move one value at a time
+            slow = nums[slow]
+            #fast will move two value at a time
+            fast = nums[nums[fast]]
+            #if both collide
+            if slow == fast:
+                break
+        #after collision assign fast to start        
+        fast = nums[0]
+        #traverse by moving slow and fast at one value at a time
+        while slow!=fast:
+            slow = nums[slow]
+            fast = nums[fast]
+            
+        return slow
+            
+        
+        #Brute Force
+        #TC - O(NLogN)+O(N)
+        #SC - O(1)
+        nums.sort()
+        
+        for i in range(len(nums)-1):
+            if nums[i] == nums[i+1]:
+                return nums[i]
+
+#5.Repeat and Missing Number
+
+#https://www.codingninjas.com/codestudio/problems/615?topList=striver-sde-sheet-problems&utm_source=striver&utm_medium=website
+
+
+#the inttion here is to calculate sum of numbers and both square of numbers
+
+#sum of numbers(x)
+#sum of given numbers array(y)
+#x-y gives difference b/w missing and repeatig number
+#x^2-y^2 == (x+y)(x-y) == s2
+#x-y = s1
+#(x+y)(x-y) = s2
+#x+y = s2/s1
+
+#(x+y)+(x-y) => x= (s1+s2/s1)//2
+#where x is repeating number
+
+
+def missingAndRepeating(A, n):
+    # Write your code here
+    s1 = (n*(n+1))//2
+    s2 = (n*(n+1)*((2*n)+1))//6
+    
+    #minus number and square from total sum and sum of squares
+    for i in A:
+        s1 -= i
+        s2 -= i*i
+
+    #can be get by above equation    
+    miss = (s1+(s2//s1))//2
+    
+    repeat = miss-s1
+    
+    return [miss,repeat]
+
+#6.Count Inversions
+
+#https://practice.geeksforgeeks.org/problems/inversion-of-array-1587115620/1Count%20Inversions
+
+class Solution:
+    #User function Template for python3
+    
+    # arr[]: Input Array
+    # N : Size of the Array arr[]
+    #Function to count inversions in the array.
+    def inversionCount(self, arr, n):
+        # Your Code Here
+        #TC - O(NLogN)
+        #SC - O(N)
+        temp =[0]*n
+        return self.mergeSort(arr,temp,0,n-1)
+        
+    def mergeSort(self,arr,temp,start,end):
+        inverseCount = 0
+        if start<end:
+            mid = (start+end)//2
+            inverseCount += self.mergeSort(arr,temp,start,mid)
+            inverseCount += self.mergeSort(arr,temp,mid+1,end)
+            inverseCount += self.merge(arr,temp,start,end,mid)
+        return inverseCount
+        
+    
+    def merge(self,arr,temp,start,end,mid):
+        inverseCount = 0
+        
+        i = start
+        j = mid+1
+        k = start
+        while i<=mid and j<=end:
+            if arr[i]<=arr[j]:
+                temp[k] = arr[i]
+                i+=1
+            else:
+                temp[k] = arr[j]
+                j+=1
+                #only change compared to merge sort code
+                #for example two list [5,6,7] [2,3]
+                #for 5<2 implies 2 will form pair with all elements in left,which is given mid-i+1
+                #+1 because it 0 based index
+                inverseCount += (mid-i+1)
+            k+=1
+        if i>mid:
+            while j<=end:
+                temp[k] = arr[j]
+                j+=1
+                k+=1
+   
+        else:
+            while i<=mid:
+                temp[k] = arr[i]
+                i+=1
+                k+=1
+        
+     
+        for z in range(start,end+1):
+            arr[z] = temp[z]
+        
+        return inverseCount
+
+
+
+
