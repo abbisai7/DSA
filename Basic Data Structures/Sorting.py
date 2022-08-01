@@ -78,6 +78,7 @@ def merge(A,temp,beg,end,mid):
 
     i = beg
     j = mid+1
+    # we use beg to update temp values accordingly
     idx=beg
     while i<=mid and j<=end:
         if A[i] <= A[j]:

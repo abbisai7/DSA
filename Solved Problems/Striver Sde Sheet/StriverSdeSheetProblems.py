@@ -667,5 +667,1289 @@ class Solution:
         return inverseCount
 
 
+###################################################################
 
+#Day-3(July 21 2022)
+
+
+#1.Search a 2D Matrix
+
+#https://leetcode.com/problems/search-a-2d-matrix/
+
+class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
+        
+        #Binary Search
+        #consider given matrix as an array peform binary search 
+        m = len(matrix)
+        n = len(matrix[0])
+        
+        start = 0
+        end = (m*n)-1
+            
+        while start<=end:
+            
+            mid = (start+end)//2
+            
+            #division by col size and modulo give mid's row and col
+            row = mid//n
+            col = mid%n
+            
+            if matrix[row][col] == target:
+                return True
+            
+            if target<matrix[row][col]:
+                end = mid-1
+            else:
+                start = mid+1
+                
+        return False
+            
+        #TC - O(m+n)
+        #SC - O(1)
+#         m = len(matrix)
+#         n = len(matrix[0])
+        
+#         start = 0
+#         end = n-1
+        
+        
+#         while start<m and end>=0:
+            
+#             if matrix[start][end] == target:
+#                 return True
+            
+#             if matrix[start][end]>target:
+#                 end -= 1
+            
+#             else:
+#                 start += 1
+                
+#         return False
+        
+
+#2.Pow(x, n)
+
+#https://leetcode.com/problems/powx-n/
+
+
+class Solution:
+    def myPow(self, x: float, n: int) -> float:
+        
+        #striver method
+        
+        #TC - O(Logn)
+        #SC - O(1)
+        
+        #we take absolute value of n
+        nn = abs(n)
+        res = 1
+        while nn>0:
+            #if power is divisible we X^n = (x^2)n/2
+            #which makes multiply x*x and dividin power by2
+            if nn%2 == 0:
+                x = x*x
+                nn = nn//2
+            #in the case of odd power n^5 = n*n^4
+            else:
+                res *= x
+                nn = nn-1
+                
+        if n<0:
+            return 1/res
+        return res
+        
+        
+        
+        
+#         #BRUTE FORCE
+#         #TC -O(N)
+#         #SC - O(1)
+#         res = 1
+#         for i in range(1,abs(n)+1):
+#             res *= x
+#         if n<0:
+#             return 1/res
+        
+#         return res
+        
+
+#3.Majority Element
+
+
+#https://leetcode.com/problems/majority-element/
+
+
+class Solution:
+    def majorityElement(self, nums: List[int]) -> int:
+        
+        #Morees's voting algo
+        #TC - O(N)
+        #SC - O(1)
+        #In this problem sure there will be only one majority element
+        ele = 0
+        count = 0
+        
+        for i in nums:
+            
+            #if the count is 0 set ele to current elem
+            if count == 0:
+                ele = i
+            #curEle and elem are same increase count by 1 else decrease by 1    
+            if i == ele:
+                count += 1
+            else:
+                count -= 1
+        
+        return ele
+        
+        
+        
+#         #TC - O(N)
+#         #SC - O(N)
+#         d={}
+        
+#         for i in nums:
+#             if i in d:
+#                 d[i] +=1
+#             else:
+#                 d[i] = 1
+                
+#         ans=0
+        
+#         for i in d.keys():
+            
+#             if d[i]>= len(nums)/2:
+#                 ans=i
+                
+#         return ans
+        
+
+#4.Majority Element II
+
+#https://leetcode.com/problems/majority-element-ii/
+
+
+class Solution:
+    def majorityElement(self, nums: List[int]) -> List[int]:
+        
+        #TC - O(N)
+        #SC - O(1)
+        #Since we need to check above n/3 there can be only two majority elements
+        count1=0
+        ele1=-1
+        count2=0
+        ele2=-1
+        
+        for i in nums:
+            
+            if i == ele1:
+                count1 += 1
+                
+            elif i == ele2:
+                count2 += 1
+            
+            elif count1 == 0:
+                ele1 = i
+                count1 = 1
+            
+            elif count2 == 0:
+                ele2 = i
+                count2 = 1
+                
+            else:
+                count1 -= 1
+                count2 -= 1
+        
+        
+        ans = []
+        num1=0
+        num2=0
+        for i in nums:
+            if ele1 == i:
+                num1 +=1
+            elif ele2 == i:
+                num2 +=1
+        
+        n = len(nums)
+        if num1 > (n/3):
+            ans.append(ele1)
+        if num2 > (n/3):
+            ans.append(ele2)
+            
+        return ans
+            
+            
+            
+            
+            
+        
+        
+#         #TC -O(N)
+#         #SC -O(N)
+#         d={}
+        
+#         for i in nums:
+#             if i in d:
+#                 d[i] +=1
+#             else:
+#                 d[i] = 1
+                
+#         ans=[]
+        
+#         for i in d.keys():
+            
+#             if d[i]>len(nums)/3:
+#                 ans.append(i)
+                
+#         return ans
+        
+
+
+#5.Unique Paths
+
+#https://leetcode.com/problems/unique-paths/
+
+class Solution:
+    def uniquePaths(self, m: int, n: int) -> int:
+        
+        #Strivers Combination Approach
+        
+        #TC - O(m-1) if we row count or O(N-1) if we col count
+        #SC - O(1)
+        res = 1
+        stepCount = m+n-2
+        #take row count
+        row = m-1
+        
+        #this for loop count ncr 
+        #10c3 can be 10*9*8/1*2*3
+        for i in range(1,row+1):
+            res *= ((stepCount-row)+i)/i
+            
+        return round(res)
+        
+        #Dynamic Programming Approach
+        #TC - O(m*n) 
+        #SC - O(m*n)
+#         return self.countPaths(0,0,m,n,{})
+
+#     def countPaths(self,curRow,curCol,m,n,memo):
+        
+#         if curRow == m-1 and curCol == n-1:
+#             return 1
+        
+#         if curRow >=m or curCol>=n:
+#             return 0
+        
+#         curKey = str(curRow) + '-' + str(curCol)
+        
+#         if curKey in memo:
+#             return memo[curKey]
+        
+        
+#         right = self.countPaths(curRow,curCol+1,m,n,memo)
+#         down = self.countPaths(curRow+1,curCol,m,n,memo)
+        
+#         memo[curKey] = right+down
+        
+#         return memo[curKey]
+
+
+
+
+
+
+
+
+
+
+
+
+#6.Reverse Pairs
+
+
+#https://leetcode.com/problems/reverse-pairs/
+
+class Solution:
+    def reversePairs(self, nums: List[int]) -> int:
+        #TC - O(NLogn)+O(N)+O(N)
+        #SC - O(N)
+        temp = [0]*len(nums)
+        return self.mergeSort(nums,temp,0,len(nums)-1)
+    
+    
+    def mergeSort(self,nums,temp,start,end):
+        
+        inv = 0
+        if start<end:
+            mid = (start+end)//2
+            
+            inv += self.mergeSort(nums,temp,start,mid)
+            inv+=self.mergeSort(nums,temp,mid+1,end)
+            inv+=self.merge(nums,temp,start,mid,end)
+            
+        return inv
+            
+    def merge(self,nums,temp,start,mid,end):
+            
+        inv = 0
+        #logic apart from merge sort
+        y = mid+1
+        #iterate first part of array over second
+        for x in range(start,mid+1):
+            #if part array ele is greater than 2*nums of second part
+            while y<=end and nums[x]>2*nums[y]:
+                y+=1
+            
+            #curret y - mid+1 since mid is 0 index
+            inv += y-(mid+1)
+            
+            
+        i = start
+        j = mid+1
+        k = start
+        
+        while i<= mid and j<=end:
+            if nums[i]<=nums[j]:
+                temp[k] = nums[i]
+                i += 1
+            else:
+                temp[k] = nums[j]
+                j += 1
+                
+            k += 1
+        
+        if i>mid:
+            while j<=end:
+                temp[k] = nums[j]
+                j += 1
+                k += 1
+        else:
+            while i<=mid:
+                temp[k] = nums[i]
+                i += 1
+                k += 1
+                
+        for u in range(start,end+1):
+            nums[u] = temp[u]
+            
+        return inv
+        
+        
+        
+        
+        #Brute Force
+        #TC - O(N*N
+        #SC - O(1)
+#         count = 0
+#         for i in range(len(nums)):
+#             for j in range(i+1,len(nums)):
+                
+#                 if nums[i]>2*nums[j]:
+#                     count+=1
+                    
+#         return count
+        
+
+
+#Day-4
+
+
+#1.Two Sum
+
+#https://leetcode.com/problems/two-sum/
+
+
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        #TC - O(N)
+        #SC - O(N)
+        
+        d = {}
+        
+        for i in range(len(nums)):
+            comp = target-nums[i]
+            
+            if comp in d:
+                return [d[comp],i]
+            
+            else:
+                d[nums[i]] = i
+
+#2. 4 Sum
+
+#https://leetcode.com/problems/4sum/
+
+class Solution:
+    def fourSum(self, nums: List[int], target: int) -> List[List[int]]:
+        
+        #TC - O(NLogn)+O(N^3)
+        #SC - O(1)
+        res = []
+        n = len(nums)
+        
+        #sort the numbers
+        nums.sort()
+        i=0
+        while i<len(nums):
+            target1 = target-nums[i]
+            j=i+1
+            while j<len(nums):
+                target2 = target1-nums[j]
+                
+                front = j+1
+                back = n-1
+                
+                while front < back:
+                    
+                    two_sum = nums[front]+nums[back]
+                    
+                    #4<7(target)
+                    #move front else back
+                    if two_sum<target2:
+                        front += 1
+                        
+                    elif two_sum>target2:
+                        back -= 1
+                        
+                    else:
+                        
+                        quad = []
+                        
+                        quad.append(nums[i])
+                        quad.append(nums[j])
+                        quad.append(nums[front])
+                        quad.append(nums[back])
+                        res.append(quad)
+                        
+
+                        
+                        #to overcome the duplicate
+                        #current at 3,3,3,4 pushes to four
+                        while front<back and nums[front]==quad[2]:
+                            front+=1
+                        
+                        #current at 4 3,3,3,4,4,4 pushes back to 3 
+                        while front<back and nums[back]==quad[3]:
+    
+                            back -= 1
+                
+                #same iterate till till last element of duplcuate
+                #2,2,2,3 goes till last 2
+                while j+1<n and nums[j]==nums[j+1]:
+                    j+=1
+                    
+                j+=1
+            
+                    
+            
+            
+            while i+1<n and nums[i] == nums[i+1]:
+                i+=1
+                
+            i+=1
+                
+                
+        return res
+                
+                
+
+#3. Longest Consecutive Sequence
+
+
+#https://leetcode.com/problems/longest-consecutive-sequence/
+
+class Solution:
+    def longestConsecutive(self, nums: List[int]) -> int:
+        
+        #striver method
+        
+        #TC - O(N)
+        #SC - O(N)
+        
+        #remove duplicates
+        s = set(nums)
+        
+        res = 0
+        for i in range(len(nums)):
+            if nums[i]-1 in s:
+                continue
+            
+            #starting of the sequence
+            cur = nums[i]
+            ans = 0
+            while cur in s:
+                ans+=1
+                s.remove(cur)
+                cur = cur+1
+                
+            res = max(ans,res)
+            
+        return res
+
+
+#4.Largest subarray with 0 sum
+# 
+# https://practice.geeksforgeeks.org/problems/largest-subarray-with-0-sum/1
+# 
+# 
+class Solution:
+    def maxLen(self, n, arr):
+        #Code here
+        
+        #TC - O(N)
+        #SC - O(N)
+        
+        d = {}
+        #to handle edge case and if total array has zero sum
+        d[0] = -1
+        
+        ps = 0
+        ans = 0
+        
+        for i in range(len(arr)):
+            ps += arr[i]
+            
+            #if ps is in hashmap calculate distance curr i value and value in hashmap
+            if ps in d:
+                ans = max(ans,i-d[ps])
+                
+            else:
+                d[ps] = i
+                
+        return ans
+        
+        #TC - O(N*N)
+        #SC - O(1)
+        # res = 0
+        # for i in range(len(arr)):
+        #     s=0
+        #     for j in range(i,len(arr)):
+        #         s+=arr[j]
+                
+        #         if s == 0:
+        #             res = max(res,j-i+1)
+                    
+            
+                    
+        # return res      
+        
+        
+        
+        #Brute Force
+        #TC - O(NLogN)+O(N)
+        #SC - O(1)
+#         if len(nums)==0:
+#             return 0
+        
+#         nums.sort()
+        
+#         cur = 1
+#         ans = 1
+#         prev = nums[0]
+        
+#         for i in range(1,len(nums)):
+            
+#             if nums[i] == prev+1:
+#                 cur += 1
+            
+#             #also take care of duplicates in input
+#             #only in case of not equal set cur to 1
+            
+#             elif nums[i] != prev:
+#                 cur = 1
+                
+#             prev = nums[i]
+#             ans = max(ans,cur)
+            
+#         return ans
+
+
+
+#5.Subarray with given XOR
+
+#https://www.interviewbit.com/problems/subarray-with-given-xor/
+
+
+class Solution:
+    # @param A : list of integers
+    # @param B : integer
+    # @return an integer
+    def solve(self, A, B):
+        #TC - O(N)
+        #SC - O(N)
+        #same as leetcode 560
+        #here we take xor instead of adding
+        count = 0
+        ps = 0
+        #hashmap stores value and its freq
+        d={}
+        
+
+        d[0] = 1
+    
+        for i in A:
+            ps = ps^i
+            
+            #if xor of ps if already present return it freq        
+            if ps^B in d:
+                count += d[ps^B]
+            if ps in d:
+                d[ps] += 1
+            else:
+                d[ps] = 1
+        return count
+
+
+#6.Longest Substring Without Repeating Characters
+
+
+#https://leetcode.com/problems/longest-substring-without-repeating-characters/
+
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        
+        #Sahils Approach
+        #TC - O(N)
+        #SC - O(N)
+        
+        d = {}
+        ans = 0
+        release = 0
+        
+        for acquire in range(0,len(s)):
+            
+            #we can either of the below
+            #running while curElement gets deleted from hashmap
+            #abcc
+            #firstrelease will be at 0 by the end of the loop it will be at 3
+            # while release < acquire and d.get(s[acquire])!=None:
+            #     d.pop(s[release])
+            #     release +=1
+            
+            #if it is already present in hashmap and relase pointer is less than curElementIndex, we will change release curIndex+1, so that all element in new Window will be uniqu
+            if d.get(s[acquire])!= None and release <= d[s[acquire]]:
+                release = d[s[acquire]]+1                
+                
+            d[s[acquire]] = acquire
+            ans = max(ans,acquire-release+1)
+            
+        return ans
+        
+        
+        #Brute Force
+        #TC - O(N*N)
+        #SC - O(1)
+        
+#         if len(s) == 0:
+#             return 0
+#         ans = 1
+        
+#         for i in range(len(s)):
+#             for j in range(i+1,len(s)+1):
+#                 if len(s[i:j]) == len(set(s[i:j])):
+#                     ans = max(ans,len(s[i:j]))
+                
+                
+#         return ans
+
+
+#Day-5
+ # 
+ # 
+ # 1.Reverse Linked List
+
+
+#https://leetcode.com/problems/reverse-linked-list/
+
+
+class Solution:
+    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        
+        #TC - O(N)
+        #SC - O(1)
+        prev = None
+        
+        while head:
+            temp = head.next
+            head.next = prev
+            prev = head
+            head = temp
+            
+        return prev
+
+
+
+#2.Middle of the Linked List
+
+
+#https://leetcode.com/problems/middle-of-the-linked-list/
+
+
+class Solution:
+    def middleNode(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        #TC - O(N)
+        #SC - O(1)
+        
+        slow = head
+        fast = head
+        
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+            
+        return slow
+
+
+
+#3.Merge Two Sorted Lists
+
+
+#https://leetcode.com/problems/merge-two-sorted-lists/
+
+class Solution:
+    def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
+        #TC - O(M+N)
+        #SC - O(1)
+        
+        dummyPointer = currentPointer = ListNode(-1)
+        
+        while list1 and list2:
+            if list1.val < list2.val:
+                currentPointer.next = list1
+                list1 = list1.next
+            else:
+                currentPointer.next = list2
+                list2 = list2.next
+            currentPointer = currentPointer.next
+            
+            
+        while list1:
+            currentPointer.next = list1
+            list1 = list1.next
+            currentPointer = currentPointer.next
+            
+        while list2:
+            currentPointer.next = list2
+            list2 = list2.next
+            currentPointer = currentPointer.next
+            
+            
+        return dummyPointer.next
+
+#4.Remove N-th node from the end of a Linked List
+
+#https://leetcode.com/problems/remove-nth-node-from-end-of-list/
+
+class Solution:
+    def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
+        
+        #TC - O(N)
+        #SC - O(1)
+        runner = head
+        
+        #dummy node to handle edge case in case when head itself to be deleted we need prev to map
+        follower = dummyNode = ListNode(-1,head)
+        
+        #moving from 0 to n-1 first to place runner
+        for i in range(n-1):
+            runner = runner.next
+        
+        #runner will move till last n node, and follower will be n steps backwards,,which is at the point we need to delete
+        while runner.next!=None:
+            runner = runner.next
+            follower = follower.next
+        
+        #mapping follower next's to next of next
+        follower.next = follower.next.next
+        
+        #dummypointer hold head
+        return dummyNode.next
+
+
+#5.Add Two Numbers
+
+
+#https://leetcode.com/problems/add-two-numbers/
+
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:
+        
+        #for example in sum 18
+        #carry will be 1 which we get by 18//10
+        #sum place will be 18%10 = 8
+        
+        #TC - O(N+M)
+        #SC - O(1)
+        
+        dummyPtr = res = ListNode(-1)
+        
+        carry = 0
+        
+        while l1 and l2:
+            s = l1.val+l2.val+carry
+            carry = s//10
+            
+            node = ListNode(s%10)
+            
+            res.next = node
+            
+            l1 = l1.next
+            l2 = l2.next
+            res = res.next
+            
+        #if anything left
+        while l1 != None:
+            s=l1.val+carry
+            carry = s//10
+            node = ListNode(s%10)
+            
+            res.next = node
+            l1=l1.next
+            res = res.next
+            
+        while l2 != None:
+            s=l2.val+carry
+            carry = s//10
+            node = ListNode(s%10)
+            
+            res.next = node
+            l2=l2.next
+            res = res.next
+        
+        #atlast if carry is not 0
+        if carry==1:
+            node = ListNode(carry)
+            res.next = node
+            
+            
+            
+        return dummyPtr.next
+            
+
+
+
+
+#6.Delete Node in a Linked List
+
+#https://leetcode.com/problems/delete-node-in-a-linked-list/
+
+
+class Solution:
+    def deleteNode(self, node):
+        """
+        :type node: ListNode
+        :rtype: void Do not return anything, modify node in-place instead.
+        """
+        #TC - O(1)
+        #SC - O(1)
+        
+        node.val = node.next.val
+        
+        node.next = node.next.next
+
+
+
+#Day 6(27th July 2022)
+
+
+#1.Intersection of Two Linked Lists
+
+#https://leetcode.com/problems/intersection-of-two-linked-lists/
+
+
+class Solution:
+    def getIntersectionNode(self, headA: ListNode, headB: ListNode) -> Optional[ListNode]:
+        
+        #Striver Method
+        #TC - O(2*Max(M,N))
+        #SC - O(1)
+        
+        d1 = headA
+        d2 = headB
+        
+        while d1 != d2:
+            d1 = headB if d1 == None else d1.next
+            d2 = headA if d2 == None else d2.next
+            
+        return d1
+        
+        #Second Method
+        #TC - O(M+N)
+        #SC - (N)
+        
+#         s = set()
+        
+#         temp=headA
+#         while temp!=None:
+#             s.add(temp)
+#             temp = temp.next
+            
+#         temp = headB
+#         while temp != None:
+#             if temp in s:
+#                 return temp
+#             temp = temp.next
+            
+#         return None
+        
+        #Brute Force
+        #TC - O(M*N)
+        #SC - O(1)
+#         while headB!=None:
+#             temp = headA
+            
+#             while temp!=None:
+#                 if temp == headB:
+#                     return temp
+                
+#                 temp = temp.next
+                
+#             headB = headB.next
+            
+#         return None
+
+
+
+
+#2.Linked List Cycle
+
+#https://leetcode.com/problems/linked-list-cycle/
+
+
+class Solution:
+    def hasCycle(self, head: Optional[ListNode]) -> bool:
+        
+        #TC - O(N)
+        #SC - O(1)
+        
+        if head == None or head.next == None:
+            return False
+        
+        
+        slow = head
+        fast = head
+        
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+            
+            if slow == fast:
+                return True
+            
+        return False
+
+
+#3. Reverse Nodes in k-Group
+
+
+#https://leetcode.com/problems/reverse-nodes-in-k-group/
+
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def reverseKGroup(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:
+        
+        #TC - O(N/K)*k = O(N)
+        #SC - O(1)
+        if head == None and head.next == None:
+            return None
+        
+        #first calculate the height
+        height = self.getHeight(head)
+        
+        #have and dummy and prev
+        dummyNode = ListNode(-1,head)
+        prev = dummyNode
+        
+        #gives how many group to be done
+        c = height//k
+        
+        
+        while c>0:
+            cur = prev.next
+            nxt = cur.next
+            #run till k-1
+            #k=3-1=2
+            #inp -> -1-1-2-3
+            #step1 -> -1-2-1-3
+            #step2 -> -1-3-2-1
+            for i in range(k-1):
+                
+                cur.next = nxt.next
+                nxt.next = prev.next
+                prev.next = nxt
+                nxt = cur.next
+            c-=1
+            prev = cur
+            # cur = prev.next
+            # nxt = cur.next
+            
+            
+        return dummyNode.next
+        
+        
+    def getHeight(self,head):
+        count = 0
+        
+        while head:
+            count+=1
+            head = head.next
+            
+        return count
+        
+
+#4.Palindrome Linked List
+
+#https://leetcode.com/problems/palindrome-linked-list/
+
+
+class Solution:
+    def isPalindrome(self, head: Optional[ListNode]) -> bool:
+        
+        #TC - O(N/2)+O(N/2)+O(N/2)
+        #SC - O(1)
+        mid = self.getMid(head)
+        
+        reversedHalf = self.reverseHalf(mid)
+        
+        while head and reversedHalf:
+            if head.val != reversedHalf.val:
+                return False
+            
+            head = head.next
+            reversedHalf = reversedHalf.next
+            
+        return True
+    
+    
+    def getMid(self,head):
+        
+        slow = head
+        fast = head
+        
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+            
+        return slow
+    
+    def reverseHalf(self,head):
+        prev = None
+        cur = head
+        while cur:
+            temp = cur.next
+            cur.next = prev
+            prev = cur
+            cur = temp
+            
+        return prev
+
+
+
+#5.  Linked List Cycle II
+
+#https://leetcode.com/problems/linked-list-cycle-ii/
+
+
+class Solution:
+    def detectCycle(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        
+        #TC - O(N)
+        #SC - O(1)
+        if not head or not head.next:
+            return None
+        
+        slow = head
+        fast = head
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+            
+            if slow == fast:
+                fast = head
+                while slow!=fast:
+                    slow = slow.next
+                    fast = fast.next
+            
+                return slow
+        
+        return None
+
+
+#6. Flattening a Linked List
+
+#https://practice.geeksforgeeks.org/problems/flattening-a-linked-list/1
+
+
+def merge(n1,n2):
+    
+    dummyNode = temp = Node(-1)
+    
+    while n1!=None and n2!=None:
+        
+        if n1.data <= n2.data:
+            temp.bottom = n1
+            n1 = n1.bottom
+        else:
+            temp.bottom = n2
+            n2 = n2.bottom
+        
+        temp = temp.bottom
+        
+    if n1 != None:
+        temp.bottom = n1
+    else:
+        temp.bottom = n2
+        
+    return dummyNode.bottom
+
+def flatten(root):
+    #Your code here
+    #TC - O(N)
+    #SC - O(1)
+    #we move to the last list and then start combining from last
+    #for this recursion is used
+    
+    
+    if root == None or root.next == None:
+        return root
+        
+    
+    #just normal merge in mergesort
+    #we will keep on combining from end and pass the combined one to merge further
+    root = merge(root,flatten(root.next))
+    
+    
+    return root
+
+
+
+
+
+#Day -7
+
+
+#1.Rotate List
+
+#https://leetcode.com/problems/rotate-list/
+
+class Solution:
+    def rotateRight(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:
+        
+        #Striver Method
+        
+        #TC - O(N)+O(N-(k%N))
+        #SC - O(1)
+        if head == None or head.next == None:
+            return head
+        
+        #count as 1 because we will come out before last node itself
+        count = 1
+        cur = head
+        
+        while cur.next != None:
+            count += 1
+            cur = cur.next
+        
+        cur.next = head
+        
+        
+        #k%count remainder since k may be multiple of total length
+        j = count - (k%count)
+        
+        #iterate last before k
+        temp = head
+        while j!=1:
+            temp = temp.next
+            j-=1
+        #assign next of cur as head and cur next to null    
+        head = temp.next
+        temp.next = None
+        
+        return head
+        #Brute Force
+        #TC - O(N)+O(N*(k%N))
+        #SC - O(1)
+        
+#         if head == None or head.next == None:
+#             return head
+        
+#         count = 0
+#         cur = head
+#         while cur:
+#             count += 1
+#             cur = cur.next
+            
+#         #multiple of length of linked list give same as input
+#         #so we just run modulo of k by length
+#         for i in range(k%count):
+#             cur = head
+#             prev=None
+#             while cur.next!=None:
+#                 prev = cur
+#                 cur = cur.next
+#             prev.next = None
+#             cur.next = head
+#             head = cur
+            
+#         return head
+
+
+#6.Max Consecutive Ones
+
+#https://leetcode.com/problems/max-consecutive-ones/
+
+class Solution:
+    def findMaxConsecutiveOnes(self, nums: List[int]) -> int:
+        
+        #second method
+        
+        #Tc - O(N)
+        #SC - O(1)
+        res = 0
+        ans = 0
+        
+        for i in nums:
+            #if it is one increment else mark res to 0
+            if i == 1:
+                res+=1
+            else:
+                res = 0
+                
+            ans = max(ans,res)
+            
+        return ans
+        
+#         #one method
+#         #we will calculate the ps if previovs ps and currentPs is same
+#         #we will max res in ans and mark res = 0
+#         #if ps is not equal we will inc res
+#         ps = 0
+#         ans = 0
+#         res = 0
+#         for i in nums:
+            
+#             if ps+i == ps:
+#                 ans = max(ans,res)
+#                 res=0
+#             else:
+#                 res+=1
+#             ps+=i
+            
+#         return max(ans,res)
+    
+    
+    
 
