@@ -1907,6 +1907,224 @@ class Solution:
 #         return head
 
 
+#2.Copy List with Random Pointer
+
+#https://leetcode.com/problems/copy-list-with-random-pointer/
+
+
+class Solution:
+    def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
+        
+        #Strivers Method
+        #TC - O(N)
+        #SC - O(1)
+        cur = head
+        #First round: make copy of each node,
+        #and link them together side-by-side in a single list.
+        #ex 1->2->3->None maps to 1->-1>2->-2->3->-3->None
+        while cur:
+            node = ListNode(cur.val)
+            temp = cur.next
+            cur.next = node
+            node.next = temp
+            cur = temp
+            
+        cur = head
+        
+        #now assign random pointer to new node created
+        while cur:
+            if cur.random:
+                cur.next.random = cur.random.next
+            else:
+                cur.next.random = None
+            cur = cur.next.next
+            
+        
+        dummy = res =Node(-1)
+        
+        #now just link new nodes by excluding original nodes
+        cur = head
+        while cur:
+            res.next = cur.next
+            res = res.next
+            cur = cur.next.next
+            
+        return dummy.next
+        
+        
+        
+        
+        #Brute Force
+        #TC - O(N)
+        #SC - O(N)
+        
+        
+        d={}
+        
+        cur = head
+        d[None] = None
+        #First create a node and store existing node as key and new node as value
+        while cur:
+            node = Node(cur.val)
+            d[cur] = node
+            cur = cur.next
+        
+        cur = head
+        #for new node assign next and random as of original
+        while cur:
+            copy = d[cur]
+            copy.next = d[cur.next]
+            copy.random = d[cur.random]
+            cur = cur.next
+        
+        #original head also will aslo be head in copy
+        return d[head]
+
+#3.3 Sum
+
+class Solution:
+    def threeSum(self, nums: List[int]) -> List[List[int]]:
+        
+        #TC - O(N*N)
+        #SC - O(M)- M no of triplets
+        
+        nums.sort()
+        res = []
+        
+        for i in range(len(nums)-2):
+            
+            #to escape duplicate elements
+            if i == 0 or (i>0 and nums[i]!=nums[i-1]):
+                target = 0-(nums[i])
+                
+                low = i+1
+                end = len(nums)-1
+                
+                while low<end:
+                    
+                    temp = nums[low]+nums[end]
+                    if temp<target:
+                        low+=1
+                    elif temp>target:
+                        end-=1
+                    elif temp == target: 
+                        res.append([nums[i],nums[low],nums[end]])
+                        
+                        #to escape duplicates
+                        # while low<len(nums)-1 and nums[low]==nums[low+1]:
+                        #     low+=1
+                        while low<end and nums[low] == nums[low+1]:
+                            low += 1
+                        # while end>1 and nums[end]==nums[end-1]:
+                        #     end-=1
+                        
+                        while low<end and nums[end]==nums[end-1]:
+                            end-=1
+                            
+                        low+=1
+                        end-=1
+        
+                        
+        return res
+        
+        #Brute Force
+        #TC - O(n*2logm)
+        #SC - O(N)+O(M)
+#         d = {}
+#         res=[]
+#         for i in nums:
+#             if i in d:
+#                 d[i]+=1
+#             else:
+#                 d[i] = 1
+                
+#         for i in range(len(nums)-2):
+#             #not to include
+#             d[nums[i]]-=1
+#             for j in range(i+1,len(nums)-1):
+#                 #not to include
+#                 d[nums[j]]-=1
+#                 temp = -(nums[i]+nums[j])
+                
+#                 if d.get(temp,0)>0:
+#                     ans = sorted([nums[i],nums[j],temp])
+#                     if ans not in res:
+#                         res.append(ans)
+#                 d[nums[j]]+=1
+#             d[nums[i]]+=1
+                    
+        #return res
+                    
+        
+        
+        #Brute Force
+        #TC - O(N^3logm)
+        #SC - O(3*k)
+#         res=[]
+        
+#         for i in range(len(nums)-2):
+#             for j in range(i+1,len(nums)-1):
+#                 for k in range(j+1,len(nums)):
+#                     if nums[i]+nums[j]+nums[k] == 0:
+#                         temp = sorted([nums[i],nums[j],nums[k]])
+#                         res.append(temp)
+                        
+#         return res
+
+
+#4. Trapping Rain Water
+
+#https://leetcode.com/problems/trapping-rain-water/
+
+
+class Solution:
+    def trap(self, height: List[int]) -> int:
+        #TC - O(N)
+        #SC - O(1)
+        #here in the middle of max trap, we should consider only space left by that index element, so at a instance maxlength - curheight should be added to res
+        res = 0
+        left = 0
+        right = len(height)-1
+        maxLeft = height[left]
+        maxRight = height[right]
+        while left<right:            
+            
+            if height[left]<height[right]:
+                maxLeft = max(maxLeft,height[left])
+                #res will have maxLeft - curheight as curHeight should nt be included in ans
+                res+= maxLeft-height[left]
+                left+=1
+            else:
+                maxRight = max(maxRight,height[right])
+                res+= maxRight-height[right]
+                right-=1
+                
+        return res
+
+
+#5.Remove Duplicates from Sorted Array
+
+#https://leetcode.com/problems/remove-duplicates-from-sorted-array/
+
+class Solution:
+    def removeDuplicates(self, nums: List[int]) -> int:
+        #TC - O(N)
+        #SC - O(1)
+        
+        #take 1 as we leave frist leave untouched and we place next elemet alos index
+        i = 1
+        for j in range(len(nums)-1):
+            
+            if nums[j] != nums[j+1]:
+                #inplace replace
+                nums[i] = nums[j+1]
+                i+=1
+        
+        return i
+        
+
+
+
 #6.Max Consecutive Ones
 
 #https://leetcode.com/problems/max-consecutive-ones/
