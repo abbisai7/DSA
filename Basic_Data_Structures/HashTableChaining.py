@@ -8,10 +8,10 @@ class HashTable:
         self.arr = [[] for x in range(self.MAX)]
 
     def get_hash(self,key):
-        h = 0
+        h=0
         for i in key:
-            h += ord(i)
-        return h%self.MAX
+            h+=ord(i)
+        return h%100
 
     def __setitem__(self, key, name):
         x = self.get_hash(key)
@@ -33,8 +33,9 @@ class HashTable:
 
     def __delitem__(self, key):
         x = self.get_hash(key)
-        for idx, element in enumerate(self.arr[x]):
-            if element [0] == key:
+
+        for idx,elem in enumerate(self.arr[x]):
+            if elem[0] == key:
                 del self.arr[x][idx]
         
 if __name__ == "__main__":

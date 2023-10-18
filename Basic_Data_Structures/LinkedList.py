@@ -1,3 +1,4 @@
+#linkde list is collection of node --> data, next
 class Node:
     def __init__(self, data = None, next = None):
         self.data = data
